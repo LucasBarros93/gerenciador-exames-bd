@@ -1,0 +1,2 @@
+# tem q ter o psycopg2 instalado
+psycopg2-binary==2.9.6 
