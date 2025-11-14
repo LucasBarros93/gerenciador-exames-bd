@@ -6,6 +6,7 @@ class State(Enum):
     LOGIN = 2
     SING_UP = 3
     WHO = 4
+    CITIZEN = 5
 
 def clear():
     # Windows usa 'cls', Linux e Mac usam 'clear'
@@ -113,6 +114,20 @@ class Screen:
 
         self.state = State.SING_UP
 
+    def draw_citizen(self):
+        clear()
+
+        print("|-----------------|")
+        print("|O que quer fazer?|")
+        print("|-----------------|")
+
+        print()
+        print("[1]: Ver lista completa de exames")
+        print("[2]: Buscar exames")
+        print("[3]: Marcar exame")
+        print("[3]: Cancelar exame")
+        
+        self.state = State.CITIZEN
 
 if __name__ == "__main__":
     Screen = Screen()

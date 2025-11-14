@@ -8,18 +8,25 @@ if __name__ == "__main__":
 
         option = u.input_option(3)
 
-        if(option == 3):
+        # QUIT
+        if option == 3:
             break
 
-        if(option == 1):
+        # LOGIN
+        if option == 1:
             Screen.draw_who()
-            who = int(input())
+            who = u.input_option(3)
 
             Screen.draw_login(who)
         
-        if(option == 2):
+        if option == 2:
             Screen.draw_who()
-            who = int(input())
+            who = u.input_option(3)
 
-            Screen.draw_login(who)
+            Screen.draw_sing_up(who)
+
+        # CITIZEN MAIN
+        if who == 1:
+            Screen.draw_citizen()
+            option = u.input_option(4)
 
