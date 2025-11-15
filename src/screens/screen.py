@@ -128,6 +128,7 @@ class Screen:
         print("[4]: Buscar consulta")
         print("[5]: Marcar consulta")
         print("[6]: Cancelar consulta")
+        print("[7]: Voltar para o inicio")
         
         self.state = State.CITIZEN
 
@@ -140,6 +141,7 @@ class Screen:
 
         print()
         print("[1]: OPCOES QUE O GOVERNO PODERIA FAZER")
+        print("[2]: Voltar para o inicio")
         
         self.state = State.CITIZEN
 
@@ -152,6 +154,7 @@ class Screen:
 
         print()
         print("[1]: OPCOES QUE O HOSPITAL PODERIA FAZER")
+        print("[2]: Voltar para o inicio")
         
         self.state = State.CITIZEN
 

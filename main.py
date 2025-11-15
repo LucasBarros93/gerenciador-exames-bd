@@ -9,7 +9,6 @@ if __name__ == "__main__":
         Screen.draw_welcome()
 
         option = u.input_option(3)
-        who = None
 
         # QUIT
         if option == 3:
@@ -21,7 +20,8 @@ if __name__ == "__main__":
             who = u.input_option(3)
 
             Screen.draw_login(who)
-        
+
+        # CADASTRO
         if option == 2:
             Screen.draw_who()
             who = u.input_option(3)
@@ -29,32 +29,27 @@ if __name__ == "__main__":
             Screen.draw_sign_up(who)
 
         # CITIZEN MAIN
-        if option == 1:
-            if who == 1:
-                Screen.draw_citizen()
-                option = u.input_option(4)
-                Command.commands_citizen(option)
-                espera = u.input_option(1)
-                
-            if who == 2:
-                Screen.draw_government()
-                option = u.input_option(4)
-                Command.commands_government(option)
-                espera = u.input_option(1)
-                
-            if who == 3:
-                Screen.draw_hospital()
-                option = u.input_option(4)
-                Command.commands_hospital(option)
-                espera = u.input_option(1)  # Apenas para pausar a tela
+        while who == 1:
+            Screen.draw_citizen()
+            option = u.input_option(7)
+            # Command.commands_citizen(option)
+            if option == 7:
+                break
+            
+        # MAIN GOVERNMENT
+        while who == 2:
+            Screen.draw_government()
+            option = u.input_option(2)
+            # Command.commands_government(option)
+            if option == 2:
+                break
+            
+        # HOSPITAL MAIN
+        while who == 3:
+            Screen.draw_hospital()
+            option = u.input_option(2)
+            # Command.commands_hospital(option)
+            if option == 2:
+                break
+            
 
-        if option == 2:
-            if who == 1:
-                print("Funcao de cadastro de cidadao ainda nao implementada.")
-                
-            if who == 2:
-                print("Funcao de cadastro de governo ainda nao implementada.")
-                
-            if who == 3:
-                print("Funcao de cadastro de hospital ainda nao implementada.")
-        
