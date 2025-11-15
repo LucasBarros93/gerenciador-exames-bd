@@ -79,7 +79,7 @@ class Screen:
         return
 
 
-    def draw_sing_up(self, who):
+    def draw_sign_up(self, who):
         clear()
         
         print("|----------------|")
@@ -124,8 +124,34 @@ class Screen:
         print()
         print("[1]: Ver lista completa de exames")
         print("[2]: Buscar exames")
-        print("[3]: Marcar exame")
-        print("[3]: Cancelar exame")
+        print("[3]: Ver lista completa de consultas")
+        print("[4]: Buscar consulta")
+        print("[5]: Marcar consulta")
+        print("[6]: Cancelar consulta")
+        
+        self.state = State.CITIZEN
+
+    def draw_government(self):
+        clear()
+
+        print("|-----------------|")
+        print("|O que quer fazer?|")
+        print("|-----------------|")
+
+        print()
+        print("[1]: OPCOES QUE O GOVERNO PODERIA FAZER")
+        
+        self.state = State.CITIZEN
+
+    def draw_hospital(self):
+        clear()
+
+        print("|-----------------|")
+        print("|O que quer fazer?|")
+        print("|-----------------|")
+
+        print()
+        print("[1]: OPCOES QUE O HOSPITAL PODERIA FAZER")
         
         self.state = State.CITIZEN
 

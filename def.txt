@@ -1,0 +1,511 @@
+\section{Modelo Entidade-Relacionamento}
+
+\subsection{Levantamento de Requisitos}
+
+O modelo proposto contempla as entidades e relacionamentos necessários para o gerenciamento de exames médicos voltados à renovação e emissão da Carteira Nacional de Habilitação (CNH), bem como para o controle de documentos oficiais e vínculos trabalhistas. 
+
+A entidade \textbf{Cidadão} constitui o núcleo central do modelo, identificada unicamente pelo \textbf{CPF}, e complementada por atributos como \textbf{nome} e \textbf{data de nascimento} e o booleano \textbf{É médico}. A partir dela, estabelece-se a especialização \textbf{Médico}, que herda os atributos de cidadão e inclui informações próprias, como a \textbf{especialização}. Para que um médico atue legalmente, é necessária a autorização do \textbf{CRM} (Conselho Regional de Medicina), entidade única para cada \textbf{UF} e que pode ser identificada, além do seu estado, pelo seu \textbf{endereço}. É responsável por emitir um número de registro associado a uma data de autorização. 
+
+Os cidadãos podem realizar \textbf{consultas} por meio da entidade \textbf{Hospitais}. Esta, por sua vez, é uma especialização da entidade \textbf{Empresa}, identificada pelo \textbf{CNPJ} e caracterizada por \textbf{nome}, \textbf{franquia} e \textbf{endereço} (rua, número e bairro). Além disso, o hospital possui atributos específicos como \textbf{número de leitos} e \textbf{tipo de atendimento}. A relação entre médicos e hospitais é estabelecida por meio de \textbf{contratos}, restringindo a realização de exames apenas a profissionais devidamente autorizados. O hospital possui um \textbf{Alvará Sanitário}, identificado pelo CNPJ do hospital e pela \textbf{data} de emissão do alvará. A \textbf{Agência da Secretaria da Saúde} é a entidade responsável pela emissão desse documento, sendo identificada por seu \textbf{nome} e possuindo endereço como um de seus atributos. É essencial que os hospitais estejam devidamente licenciados e tenham a devida aprovação da Agência da Secretaria da Saúde.  
+
+O vínculo de um cidadão com o hospital permite ao hospital acessar, no sentido de consultar e não de armazenar, o \textbf{Prontuário} do cidadão, que é identificado pelo \textbf{CPF} do cidadão, e que contém informações como \textbf{data de criação}, \textbf{última atualização}, \textbf{histórico clínico}, os \textbf{tratamentos} que foram realizados pelo cidadão e, também, as \textbf{alergias} registradas do cidadão. Os \textbf{exames} são realizados em consultas, e são identificados primariamente pela \textbf{data/hora} da consulta. As consultas, por sua vez, são \textbf{agendadas} e associadas a uma \textbf{data e hora}, além de envolver diretamente um cidadão e um hospital. 
+
+Os exames podem ser de diferentes tipos: \textbf{admissionais} (indica se o paciente é capaz de realizar o fundamento necessário para sua admissão, como \textbf{tipo}: clínico geral, laboratorial, aptidão física, toxicológico etc), \textbf{psicotécnicos} (indica se o paciente está apto para atividades do seu respectivo \textbf{tipo}: atenção e concentração, coordenação motora, comportamento, psiquiátrico etc), \textbf{médicos CNH} ou \textbf{toxicológicos}. Eles possuem como atributo essencial o \textbf{resultado}, complementado por informações específicas. No caso do exame Médico CNH, por exemplo, as informações específicas são uso de \textbf{óculos}, condição de \textbf{PCD}, \textbf{substâncias identificadas} ou grau de \textbf{ametropia}. Já para o exame toxicológico, a informação específica seriam as \textbf{substâncias} encontradas e testadas no exame. A correta vinculação desses dados a médicos, cidadãos e hospitais garante a rastreabilidade e a confiabilidade do processo. 
+
+Os resultados são encaminhados às \textbf{Unidades de Atendimento}, que são caracterizadas pela \textbf{cidade}, \textbf{endereço} e são vinculadas ao \textbf{DETRAN}, que é uma especialização de empresa e, portanto, é identificado pelo \textbf{CNPJ}, além de possuir a informação do \textbf{estado}. O DETRAN possui a competência de emitir a \textbf{CNH}, documento representado por atributos como \textbf{número identificador}, \textbf{tipo} (que pode conter múltiplos níveis de habilitação, como A, B, C, D, E e ACC), \textbf{data de emissão} e \textbf{data de vencimento}, sempre associado a um cidadão. 
+
+Além da CNH, o cidadão pode possuir uma \textbf{Carteira de Trabalho}, emitida por uma \textbf{Unidade do MTE} (Ministério do Trabalho e Emprego). Essa carteira é identificada pelo CPF do cidadão, sendo caracterizada pelo \textbf{tipo} (digital ou física) e \textbf{data da última atualização}. A unidade emissora, por sua vez, é caracterizada por \textbf{nome} e \textbf{endereço}. 
+
+O \textbf{Exame Admissional} apresenta uma particularidade, pois está diretamente relacionado à entidade associativa \textbf{Contrato}. Esta armazena informações como \textbf{número de contrato}, \textbf{data de admissão}, \textbf{data de demissão}, \textbf{cargo}, \textbf{salário} e \textbf{período de férias}. Cada contrato está associado a uma \textbf{empresa}, à \textbf{carteira de trabalho} do cidadão e ao exame que valida sua aptidão laboral, refletindo a integração entre dados médicos e trabalhistas. 
+
+Esse levantamento de requisitos demonstra como o modelo busca assegurar a integridade e a consistência dos dados, ao mesmo tempo em que integra múltiplas dimensões da vida do cidadão — saúde, habilitação e trabalho — em um sistema unificado e confiável.
+
+
+\subsection{Principais Funcionalidades}
+
+Há diversas funcionalidades dependendo do usuário(órgão público/agências, funcionários do hospital e cidadão). Podemos citar:
+
+\begin{itemize}
+    \item \textbf{Órgão Público/Agências}
+        \begin{itemize}[label=--]
+            \item Conferir dados do cidadão
+            \item Conferir dados dos hospitais (verificação de licensa)
+            \item Conferir os dados dos médicos
+            \item Conferir os exames
+            \item Atualizar status dos documentos
+            \item Emitir documentos
+        \end{itemize}
+
+    \item \textbf{Funcionários do Hospital}
+        \begin{itemize}[label=--]
+            \item Registrar e atualizar informações de médicos e funcionários
+            \item Marcar exames com os cidadãos
+            \item Ver dados dos cidadãos
+            \item Solicitar validação para a agência pública
+            \item Emitir resultado dos exames contendo informações dos dados dos cidadãos e médicos
+        \end{itemize}
+
+    \item \textbf{Cidadão}
+        \begin{itemize}[label=--]
+            \item Realizar o cadastro no hospital
+            \item Agendar exames
+            \item Acompanhar os resultados e desenvolvimentos dos exames
+        \end{itemize}
+\end{itemize}
+
+\subsection{Restrições de Integridade}
+
+Para assegurar a consistência, validade e confiabilidade das informações representadas no modelo, o sistema deve respeitar um conjunto de restrições de integridade, tanto em nível de entidade quanto de relacionamento. Essas restrições são fundamentais para evitar redundância, prevenir inconsistências e garantir que as regras de negócio sejam devidamente cumpridas. A seguir, estão detalhadas as principais restrições associadas às entidades e relacionamentos do modelo:
+
+\textbf{Cidadão e Médico}:  
+\begin{itemize}  
+    \item Cada cidadão deve possuir um \textbf{CPF} único e válido, não sendo permitido o cadastro duplicado;
+    \item Um médico é obrigatoriamente um cidadão, herdando o CPF, mas também deve possuir um \textbf{CRM} único emitido pelo Conselho Regional de Medicina;  
+    \item Não é permitido cadastrar médicos sem a devida autorização vinculada ao CRM;  
+    \item Médicos só podem estar associados a consultas se vinculados a hospitais por meio de contrato ativo.  
+\end{itemize}  
+
+\textbf{Hospitais e Empresas}:  
+\begin{itemize}  
+    \item Cada hospital deve possuir um \textbf{CNPJ} único e válido, além de atributos próprios como número de leitos e tipo de atendimento;  
+    \item Um hospital é uma especialização de empresa, logo não pode existir sem os atributos mínimos de uma empresa (\textbf{CNPJ}, nome, endereço);  
+    \item Um hospital não pode ser removido caso possua médicos contratados, consultas agendadas ou exames armazenados;    
+    \item Somente hospitais licenciados e que possuem alvará sanitário podem realizar ou armazenar exames.
+\end{itemize}  
+
+\textbf{Prontuários}:  
+\begin{itemize}
+  \item Cada prontuário está associado a exatamente um cidadão;
+  \item Um cidadão pode ter zero ou um prontuário;
+  \item Um prontuário pode ser acessado(consultado) por vários hospitais e um hospital pode acessar(consultar) vários prontuários;
+  \item Prontuário armazena registros clínicos derivados (tratamentos, histórico, etc.), cada um desses registros referencia exatamente um prontuário;
+  \item Atributos temporais do prontuário devem obedecer a consistência: última atualização deve ser posterior ou igual à data de criação; registros dependentes devem obedecer consistência interna de datas;
+  \item Prontuários são criados na primeira consulta do cidadão em um hospital qualquer e, posteriormente, outros hospitais só os acessam;
+\end{itemize}
+
+\begin{comment}
+\begin{itemize}  
+    \item Cada prontuário deve ser identificado por um \textbf{Id} único;  
+    \item Um prontuário deve estar sempre vinculado a um único cidadão e a um único hospital;  
+    \item Um prontuário não pode ser excluído caso contenha registros de exames;  
+    \item As informações de histórico e data de atualização devem ser mantidas de forma consistente, garantindo a rastreabilidade clínica do cidadão.  
+\end{itemize}  
+\end{comment}
+
+\textbf{Consultas e Exames}:  
+\begin{itemize}  
+    \item Toda consulta deve estar associada a um \textbf{cidadão}, um \textbf{médico} e um \textbf{hospital};   
+    \item Não é permitido registrar exames em hospitais não licenciados ou por médicos não autorizados;  
+    \item Exames admissionais só podem ser vinculados a um contrato de trabalho válido;  
+    \item Exames possuem prazo de validade definido por legislação, devendo ser considerados vencidos após esse período (ex.: exames de aptidão visual para CNH têm validade máxima de 5 anos).
+\end{itemize}  
+
+\textbf{Documentos Oficiais (CNH e Carteira de Trabalho)}:  
+\begin{itemize}  
+    \item Toda CNH oficial deve possuir um número de identificação único;  
+    \item A emissão da CNH só é permitida mediante validação de exames pelo órgão competente;  
+    \item A CNH deve conter atributos obrigatórios como número, tipo, data de emissão e data de vencimento;  
+    \item A Carteira de Trabalho deve estar vinculada a um cidadão por meio do CPF.  
+    \item Documentos oficiais não podem ser emitidos ou renovados caso vinculados a exames inválidos ou vencidos.  
+\end{itemize}  
+
+\textbf{Órgãos Públicos (DETRAN e MTE)}:  
+\begin{itemize}  
+    \item O DETRAN deve ser identificado unicamente pelo \textbf{CNPJ}, sendo responsável por emitir a CNH;  
+    \item O MTE deve ser identificado por \textbf{nome} e \textbf{endereço}, sendo responsável por emitir a Carteira de Trabalho;  
+    \item Nenhum documento pode ser emitido sem a devida associação ao órgão público competente.  
+\end{itemize}  
+
+\textbf{Contratos de Trabalho}:  
+\begin{itemize}  
+    \item Cada contrato deve possuir um \textbf{número de contrato} único para cada \textbf{funcionário} em uma \textbf{empresa} específica;  
+    \item Um contrato deve sempre estar associado a uma empresa e a uma carteira de trabalho que pertence a um cidadão;  
+    \item Não pode haver contrato sem a realização de um exame admissional válido;  
+    \item Datas de admissão e demissão devem respeitar uma ordem cronológica (admissão anterior à demissão);  
+    \item Salário e férias devem ser valores consistentes e não nulos.  
+\end{itemize}  
+
+\subsection{Análise de Ciclos}
+
+\begin{itemize}
+
+    \item \textbf{Cidadão - Prontuário - Hospitais}: \\ Surgiu um ciclo independente entre cidadão, prontuário e hospitais, através dos relacionamentos "tem", "acessa" e "agenda". Esse ciclo não pôde ser quebrado, uma vez que o cidadão ter seu prontuário e o hospital ao qual foi feito o agendamento acessá-lo(consultá-lo), são ações completamente distintas. 
+
+    \item \textbf{Cidadão - Consulta}: \\ Neste ciclo entre a entidade cidadão especializada em médico e a agregação consulta, é importante garantir posteriormente em aplicação que o cidadão o qual é médico e que também agendou uma consulta, não seja atendido por ele próprio.
+
+    \item \textbf{Cidadão Médico - Consulta - Exame Psicotécnico/Toxicológico/Médico CNH - Unidade Atendimento - DETRAN - CNH}: \\ Surgiu um ciclo envolvendo as entidades cidadão, médico, a agregação consulta, unidade atendimento, CNH para cada uma das especializações de exame (Psicotécnico, Toxicológico, Médico CNH). Esses ciclos não puderam ser quebrados, pois é natural um cidadão possuir uma CNH emitida pelo DETRAN e validada mediante exames em uma unidade de atendimento. Da mesma forma, é natural que um cidadão especializado em médico seja responsável por conduzir tais exames exigidos em uma consulta. Entretanto, esses ciclos podem ser problemáticos, uma vez que poderia ocorrer do cidadão especializado em médico ser o responsável por aplicar esses exames em si próprio para validar seus documentos. Portanto, é necessário garantir em aplicação que isso não ocorra.
+
+    \item \textbf{Cidadão Médico - Consulta - Exame Admissional - Contrato - Carteira de Trabalho}: \\ Há um ciclo entre cidadão especializado em médico, a agregação consulta, exame admissional, a agregação contrato e a carteira de trabalho, através dos relacionamentos "realiza", "trabalha", "possui" e "agenda". Esse ciclo não pôde ser quebrado, uma vez que é natural um cidadão especializado em médico aplicar um exame admissional para um contrato de trabalho de algum outro cidadão, da mesma forma que cada cidadão que trabalha possui uma carteira de trabalho vinculada ao contrato. Porém, nesse ciclo, a aplicação precisa verificar que o exame admissional exigido pelo contrato para um emprego em um hospital não seja aplicado pelo próprio médico que necessita realizar esse exame a fim de ser contratado para trabalhar no hospital. 
+\end{itemize}
+
+\subsection{Diagrama do MER}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.41\linewidth, angle=90]{images/Diagrama_MER.png}
+    \caption{Diagrama MER}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsection{Mudanças Relacionadas à Primeira Entrega}
+
+Diversas inconsistências foram encontradas pelo monitor da disciplina em nossa primeira parte do trabalho. Após o grupo adquirir mais familiaridade com o conteúdo da disciplina, fizemos todas as modificações apontadas pelo monitor. Abaixo está uma lista com tudo que foi modificado em nossa primeira parte:
+
+\begin{itemize}
+    \item \textbf{Análise de Ciclos}: Primeira mudança importante foi a criação de uma seção para a análise de ciclos em nosso diagrama do MER. Não havíamos realizado essa análise e, portanto, decidimos criar a subseção 2.4, onde foram feitas as análises de todos os ciclos presentes em nosso diagrama;
+
+    \item  \textbf{Remoção do relacionamento Cidadão-Empresa}: Havia um ciclo de redundância presente em nosso diagrama do MER, envolvendo as entidades carteira de trabalho, cidadão e a agregação contrato. Esse ciclo de redundância poderia ocasionar inconsistências em nosso banco e, portanto, optamos por removê-lo do diagrama, retirando o relacionamento de cidadão trabalha em empresa;
+
+    \item \textbf{Remoção do relacionamento Prontuário-Exame}: Optamos por remover o relacionamento Prontuário armazena Exame, uma vez que os exame admissional pode ser armazenado no contrato e os demais exames podem ser armazenados na unidade de atendimento do DETRAN. Dessa forma, o relacionamento Prontuário-Exame copiava os dados dos exames novamente, o que gerava ciclos de redundância em nosso diagrama do MER. Portanto, optamos por remover esse relacionamento, de modo que agora o prontuário é tratado como uma ficha técnica do cidadão;
+
+    \item \textbf{Participação total de CNH com DETRAN}: Foi adicionada a participação total do conjunto entidade CNH no relacionamento com DETRAN. Isso foi feito a fim de garantir que toda CNH é emitida pelo DETRAN;
+
+    \item \textbf{Remoção do Id ctps em Carteira de Trabalho}: Optamos por remover a chave parcial \textbf{id ctps} do conjunto de entidade fraca Carteira de Trabalho, uma vez que por ser uma entidade fraca em um relacionamento 1:1 com Cidadão, o identificador único de cidadão já seria o suficiente para identificar univocamente Carteira de Trabalho;
+
+    \item \textbf{Remoção de Id no Prontuário}: Optamos por remover a chave parcial \textbf{Id} do Prontuário, uma vez que ele é um conjunto de entidade fraca de cidadão. Portanto, prontuário é devidamente identificado pelo CPF de cidadão;
+
+    \item \textbf{Remoção da agregação Autorização Médica}: Para nosso sistema de banco de dados, essa agregação não era necessária. Logo, optamos por removê-la;
+
+    \item \textbf{Adição de Booleano em Cidadão}: Foi adicionado um atributo booleano no conjunto de entidade Cidadão para verificar se ele se especializou em médico ou não;
+
+    \item \textbf{Adição de atributo Tipo de exame}: Foi adicionado um atributo de especialização em Exame;
+
+    \item \textbf{Alteração na notação para uma única especialização}: Para o caso de especialização única como, por exemplo, em cidadão e médico, foi alterada a notação por meio da remoção do símbolo que indicava "Overlap";
+
+    \item \textbf{Remoção do identificador Resultado em exame}: Optamos por remover o identificador resultado do conjunto de entidades fraca Exame, uma vez que não encontramos um sentido para resultado ser um identificador. Portanto, substituímos pelo identificador \textbf{ID exame};
+    
+
+    \item \textbf{Mudanças nas seções 2.1 e 2.3}: Fizemos diversas alterações na seção 2.1 - Levantamento de Requisitos e na seção 2.3 - Restrições de Integridade, com a finalidade de se adequar a todas as mudanças realizadas em nosso diagrama. Retiramos informações que não tinham consistência com o diagrama do MER, como CNPJ do hospital em Prontuário, por exemplo, bem como adicionamos informações que não haviam sido adicionadas anteriormente, como os atributos identificadores de CRM, por exemplo;
+
+    \item \textbf{Adição de atributo em Exame Médico CNH}: Foi adicionado o atributo \textbf{Usa óculos} a fim de deixar de acordo com o que foi descrito na subseção 2.1;
+
+    \item \textbf{DETRAN como especialização}: Achamos melhor tornar DETRAN como uma especialização de empresa, já que DETRAN possui CNPJ como um identificador único;
+
+    \item \textbf{Retirada de atributo em Hospitais}: Foi retirado o atributo CMVS de Hospitais;
+\end{itemize}
+
+
+\section{Modelo Relacional}
+
+Nesta seção, é apresentado o modelo relacional da base de dados proposta, responsável por estabelecer as relações entre as diversas tabelas no nível físico.
+Além da construção do esquema, discutem-se os mapeamentos realizados durante o processo de modelagem, destacando suas vantagens, desvantagens e possíveis alternativas.
+Na representação esquemática (Seção 3.1), as tabelas são exibidas em forma de blocos, interligados por setas que indicam os relacionamentos entre elas.
+
+\newpage
+
+\subsection{Esquema do Modelo Relacional}
+
+\newpage
+
+\subsection{Discussão Sobre o Mapeamento}
+
+\begin{enumerate}
+    \item \textbf{Uso de IDs artificiais (IdUnidade, IdCRM, ID em consulta)}
+        \begin{itemize}
+            \item \textbf{Solução adotada}: Usamos IDs artificiais quando a chave natural seria grande, composta ou pouco prática (ex.: endereço completo, combinações longas) e quando precisamos de uma referência compacta, estável e eficiente para índices/joins e para uso em chaves estrangeiras.
+
+            \item \textbf{Vantagens}: IDs artificiais tornam operações de atualização e referência mais simples (mudar um atributo textual não altera a PK) e costumam melhorar desempenho em joins e índices.
+
+            \item \textbf{Desvantagem}: O uso de uma ID artificial costuma reduzir a clareza semântica, uma vez que uma chave composta representa o relacionamento real entre as entidades. Além disso, o uso de ID artificial costuma provocar queda na performance.
+
+            \item \textbf{Alternativas}: Poderia ter sido utilizado a chave composta longa, sem o uso de uma chave artificial. 
+        \end{itemize}
+
+        \item \textbf{Criação das tabelas e IDs artificiais IdCidadao e IdEmpresa}
+        \begin{itemize}
+            \item \textbf{Solução adotada}: Em vez de utilizar o 'CPF' e 'CNPJ' como chaves primárias — o que exporia um dado sensível e tornaria o banco mais vulnerável a vazamentos, adota-se um identificador artificial ('IdCidadao' para cidadão e 'IdEmpresa' para empresa) como chave substituta. Esse identificador é interno ao sistema e não possui significado fora dele, garantindo maior segurança e anonimização lógica dos registros. Além disso, armazena-se os dados pessoais como 'CPF', 'CNPJ' e 'nome' em uma tabela separada, relacionada à tabela principal apenas por meio do 'IdCidadao' e 'IdEmpresa'.
+
+            \item \textbf{Vantagens}: As vantagens são anonimização e pseudoanimização mais fáceis, conforme exigido pela LGPD(Lei Geral de Proteção de Dados Pessoais), cumprimento simplificado de solicitações de exclusão ou restrição de tratamento, já que os dados pessoais ficam isolados, redução de exposição em consultas e relatórios — as tabelas de uso cotidiano podem referenciar apenas o ID, sem conter diretamente CPF ou nome. Dessa forma, o uso de IDs artificiais combinados com tabelas especializadas para dados pessoais melhora tanto o desempenho e a integridade relacional quanto a conformidade legal e a segurança da informação.
+
+            \item \textbf{Desvantagem}: O uso de uma ID artificial costuma reduzir a clareza semântica, uma vez que uma chave verdadeira representa o relacionamento real entre as entidades, e a criação de novas tabelas aumenta a quantidade de joins, o que encarece o custo computacional.
+
+            \item \textbf{Alternativas}: Poderíamos ter descartado a ideia dessas IDs artificiais e tabelas, porém não estaria de acordo com a LGPD, visto que as informações pessoais de cidadãos e empresas são identificáveis e, portanto, devem ser tratadas com melhor cuidado.
+        \end{itemize}
+
+        \item \textbf{Especialização da entidade 'Empresa'}
+        \begin{itemize}
+            \item \textbf{Solução adotada}: Foi criada uma tabela para cada especialização de ‘Empresa’ além da genérica, uma vez que cada especialização se relaciona com entidades distintas.
+
+            \item \textbf{Vantagens}:  O fato de cada especialização possuir uma tabela distinta permite que seja mais fácil mapear os relacionamentos presentes em cada especialização.
+            
+            \item \textbf{Desvantagem}: A presença de múltiplas tabelas aumenta a quantidade de joins necessária e, portanto, encarece o custo computacional. Ademais, é necessário garantir disjunção na aplicação.
+
+            \item \textbf{Alternativas}: Uma alternativa de mapeamento seria a compressão de todas as especializações em uma tabela só. Essa alternativa não foi considerada, pois dificultaria o mapeamento de cada relacionamento com as respectivas especializações. Não foi possível garantir disjunção em nenhuma alternativa. 
+        \end{itemize}
+
+        \item \textbf{Especialização da entidade 'Médico'}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi criada uma tabela separada para a entidade 'Médico', uma vez que essa especialização se relaciona com entidades distintas.
+
+            \item \textbf{Vantagens}:  O fato de 'Médico' possuir uma tabela distinta permite que seja mais fácil mapear os relacionamentos presentes entre Médico e as entidades as quais ele se relaciona.
+            
+            \item \textbf{Desvantagem}: A presença de múltiplas tabelas aumenta a quantidade de joins necessária e, portanto, encarece o custo computacional.
+
+            \item \textbf{Alternativas}: Uma alternativa de mapeamento seria a compressão da tabela 'Médico' em uma tabela só com 'Cidadão'. Essa alternativa não foi considerada, pois dificultaria o mapeamento dos relacionamento de Médico. 
+        \end{itemize}
+
+        \item \textbf{Especialização da entidade 'Exame' (Exame\_Psicotécnico, Exame\_Toxicológico, Exame\_Médico\_CNH, Exame\_Admissional)}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi criada uma tabela separada para a entidade 'Exame', cada uma contendo uma chave Consulta, que referencia a chave principal da tabela Consulta. Dessa forma, é garantido a especialização total de Exames, visto que elimina a entidade genérica, contudo nesse caso em especial a entidade genérica raramente seria buscada no sistema, pois consultar simplesmente 'Exame' em geral não tem sentido. 
+
+            \item \textbf{Vantagens}:  O fato de 'Exame' possuir tabelas distintas para cada especialização permite que seja mais fácil mapear o relacionamento de Exame Admissional com Contrato separadamente dos relacionamentos dos demais exames. E como mencionado anteriormente, cada tabela separada com uma chave composta específica garante a especialização total de exames.
+            
+            \item \textbf{Desvantagem}: Não é mais possível consultar exames sem especificar o tipo de maneira simples.
+
+            \item \textbf{Alternativas}: Uma alternativa de mapeamento seria a compressão de todas as especializações em uma tabela só. Essa alternativa não foi considerada, pois dificultaria o mapeamento do relacionamento envolvendo Exame Admissional e Contrato. Outra possibilidade seria mapear a entidade genérica além das especializações, ideia descartada pois não garante disjunção em troca de uma operação considerada basicamente inútil (consulta por exame genérico)
+        \end{itemize}
+
+        \item \textbf{Tabelas separadas para atributos multivalorados (Alergias, Tratamentos, Substâncias, Ametropias)}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi criada uma tabela separada para cada um dos atributos multivalorados Alergias, Tratamentos, Substância e Ametropias, visto que é uma solução plausível para o caso de atributos multivalorados. 
+
+            \item \textbf{Vantagens}:  A vantagem de se ter uma tabela separada para cada atributo multivalorado é que aumenta a flexibilidade com relação a quantidade de elementos de cada atributo multivalorado.
+            
+            \item \textbf{Desvantagem}: A presença de múltiplas tabelas aumenta a quantidade de joins necessária e, portanto, encarece o custo computacional.
+
+            \item \textbf{Alternativas}: Uma alternativa de mapeamento seria a limitação na quantidade de elementos de cada atributo multivalorado, de modo a diminuir a quantidade de tabelas e de joins necessários.
+        \end{itemize}
+
+        \item \textbf{Ausência de tabela para o atributo multivalorado 'Tipo' de CNH}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi escolhido apenas cinco tipos de elementos para o atributo multivalorado 'Tipo' de CNH (A, B, C, D, E). A redução de elementos é uma solução plausível quando se trata de multivalorados. Será necessário garantir consistencia do tipo da CNH na aplicação, uma vez que esse respeita uma hierarquia, sendo necessário ter o tipo anterior antes do seguinte, isto é, ter o 'tipo B' para ter o 'tipo C', por exemplo, com exceção ao 'tipo A' que é independente dos outros em todos os sentidos.
+
+            \item \textbf{Vantagens}:  A vantagem dessa escolha é que diminui a quantidade de tabelas e de joins necessários.
+            
+            \item \textbf{Desvantagem}: A desvantagem é que há uma perda na flexibilidade com relação a quantidade de elementos do multivalorado.
+
+            \item \textbf{Alternativas}: Uma alternativa de mapeamento seria criar uma tabela Tipo de CNH para listar mais de cinco elementos para esse multivalorado. No entanto, aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional. 
+        \end{itemize}
+
+        \item \textbf{Atributo derivado 'Vencimento' de CNH}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi escolhido salvar o atributo 'Vencimento' da CNH direto em sua tabela visto que esse atributo é um dos mais importantes e consultados da entidade, e seu calculo pode parecer fácil, mas varia não só com a data de emissão, mas também com a idade do condutor e eventuais problemas encontrados em seus exames, como uso de óculos por exemplo.
+
+            \item \textbf{Vantagens}: Deixa a consulta muito mais rápida e sem necessidade de qualquer operação de calculo para encontrar a data de vencimento
+            
+            \item \textbf{Desvantagem}: Ocupa mais espaço no banco de dados.
+
+            \item \textbf{Alternativas}: Uma alternativa seria calcular a data de vencimento sobre demanda, mas essa foi descartada pensando que a data de vencimento seria um dos atributos mais consultados da tabela CNH.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'emite' entre Unidade MTE e Carteira de Trabalho - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'Carteira\_Trabalho', foi inserido o atributo 'UniMTE', referenciando a chave 'IdUnidade' de 'Unidade\_MTE'. Isso permite que a mesma Unidade MTE seja responsável por emitir várias Carteiras de Trabalho, mas que cada carteira de trabalho esteja associada a somente uma unidade MTE. 
+
+            \item \textbf{Vantagens}:  A vantagem dessa escolha é que preserva a cardinalidade 1:N do relacionamento, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: A principal desvantagem nessa solução seria a presença de valores nulos.
+
+            \item \textbf{Alternativas}: Uma alternativa seria criar uma tabela extra contendo uma chave composta por dois atributos, em que um atributo referencia a chave ID artificial da tabela Unidade\_MTE e outro atributo referencia a chave da tabela Carteira\_Trabalho. No entanto, essa alternativa aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional.
+        \end{itemize}
+
+        \item \textbf{Mapeamento da Entidade Fraca entre Cidadão e Carteira de Trabalho - 1:1}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'Carteira\_Trabalho', foi inserido o atributo 'Cidadao', que é a chave principal de Carteira\_Trabalho e que referencia a chave 'IdCidadao' de 'Cidadao'. Essa é uma forma plausível de se mapear esse relacionamento, uma vez que Carteira de Trabalho é entidade fraca de Cidadão e possui como identificador o IdCidadao do cidadão, além de garantir que o cidadão possui somente uma carteira de trabalho e que cada carteira de trabalho pertence a somente um cidadão.  
+
+            \item \textbf{Vantagens}:  As vantagens dessa escolha é que preserva a cardinalidade 1:1 do relacionamento, garante a participação total de Carteira de Trabalho no relacionamento, ao passo que diminui a quantidade de elementos NULL no mapeamento, visto que é considerado que há mais cidadãos do que carteiras de trabalho.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Não foram identificadas formas alternativas, por conta do identificador de Carteira\_Trabalho ser a chave principal de Cidadao.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'possui' entre Cidadão e CNH - 1:1}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'CNH', foi inserido o atributo 'Cidadao', referenciando a chave 'IdCidadao' de 'Cidadao'. Essa solução adotada garante que cada CNH pertence a somente um cidadão, mas que cada cidadão possui somente uma CNH.
+
+            \item \textbf{Vantagens}:  As vantagens dessa escolha é que preserva a cardinalidade 1:1 do relacionamento, garante a participação total de CNH no relacionamento, ao passo que diminui a quantidade de elementos NULL, visto que é considerado que há mais cidadãos do que CNH.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Uma forma alternativa seria inserir um atributo na tabela de Cidadao, referenciando a chave de CNH. No entanto, essa solução não garante a participação total de CNH no relacionamento, além de aumentar a quantidade de elementos NULL, visto que é considerado que há mais cidadãos do que CNH.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'Tem' entre Cidadão e Prontuário - 1:1}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'Prontuario', foi inserido o atributo 'Cidadao', que é a chave principal de Prontuario e que referencia a chave 'IdCidadao' de 'Cidadao'. Essa é uma forma plausível de se mapear esse relacionamento, uma vez que Prontuário é entidade fraca de Cidadão e possui como identificador o IdCidadao do cidadão, além de garantir que o cidadão possui somente um prontuário e que cada prontuário pertence a somente um cidadão. 
+
+            \item \textbf{Vantagens}:  As vantagens dessa escolha é que preserva a cardinalidade 1:1 do relacionamento, garante a participação total de Prontuário no relacionamento, ao passo que diminui a quantidade de elementos NULL, visto que é considerado que há mais cidadãos do que prontuários.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Não foram identificadas formas alternativas, por conta do identificador de Prontuario ser a chave principal de Cidadao.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'emite' entre DETRAN e CNH - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'CNH', foi inserido o atributo 'Detran' (not null), referenciando a chave 'Empresa' da tabela 'Detran'. Isso permite que o DETRAN seja responsável por emitir várias CNH, mas que cada CNH esteja associada a somente um DETRAN. 
+
+            \item \textbf{Vantagens}:  As vantagens dessa escolha é que preserva a cardinalidade 1:N do relacionamento, garante a participação total de CNH no relacionamento, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Uma alternativa seria criar uma tabela extra contendo uma chave composta por dois atributos, em que um atributo referencia a chave da tabela CNH e outro atributo referencia a chave da tabela Detran. No entanto, essa alternativa aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional. Além de não garantir a participação total de CNH no relacionamento.
+        \end{itemize}
+
+        \item \textbf{Mapeamento de Entidade Fraca entre DETRAN e Unidade Atendimento - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'UnidadeAtendimento', foi inserido o atributo 'Detran', referenciando a chave 'Empresa' da tabela 'Detran'. Isso permite o DETRAN possuir várias Unidades de Atendimento, mas que cada Unidade de Atendimento esteja associada a somente um DETRAN. 
+
+            \item \textbf{Vantagens}:  As vantagens dessa escolha é que preserva a cardinalidade 1:N do relacionamento, garante a participação total de Unidade de Atendimento no relacionamento, uma vez que ela é uma entidade fraca, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Não foram identificadas formas alternativas, por conta de um dos identificadores de Unidade de Atendimento ser a chave principal de DETRAN.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'recebe' entre Unidade Atendimento e Exame psicotécnico/Médico CNH/toxicológico - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Para cada uma das tabelas presentes em nosso esquema: 'Exame\_Psicotecnico', 'Exame\_Toxicologico' e 'Exame\_Medico\_CNH', foram adicionados dois atributos 'Unidade' e 'Detran' referenciando a chave composta 'IdUnidade' e 'Detran' da tabela 'UnidadeAtendimento'. Isso permite a Unidade Atendimento receber vários exames(Psicotécnico, Médico CNH, Toxicológico), mas que cada exame seja enviado a somente uma Unidade de Atendimento do DETRAN.
+
+            \item \textbf{Vantagens}: As vantagens dessa escolha é que preserva a cardinalidade 1:N dos relacionamentos, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: A principal desvantagem nessa solução seria a presença de valores nulos.
+
+            \item \textbf{Alternativas}: Uma alternativa seria criar tabelas extras, em que cada uma contém uma chave composta por dois atributos, em que um atributo referencia a chave da tabela UnidadeAtendimento e outro atributo referencia a chave das respectivas tabelas Exame\_Psicotecnico/Medico\_CNH/Toxicologico. No entanto, essa alternativa aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'acessa' entre Hospitais e Prontuário - N:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi criada uma tabela nova 'RelProntuarioHospital' tendo como chave composta 'Prontuario', referenciando a chave 'Cidadao' da tabela 'Prontuario', e 'Hospital', referenciando a chave 'Empresa' da tabela 'Hospitais'.
+
+            \item \textbf{Vantagens}: Preserva a cardinalidade N:N do relacionamento e permite que vários hospitais acessem(consultem) vários prontuários.
+            
+            \item \textbf{Desvantagem}: Não garante a participação total de Prontuário no relacionamento, sendo necessário garanti-la em aplicação, além de aumentar o número de tabelas e de joins, o que encarece o custo computacional.
+
+            \item \textbf{Alternativas}: Não foram identificadas alternativas. 
+        \end{itemize}
+
+        \item \textbf{Mapeamento de Entidade Fraca entre Hospitais e Alvará Sanitário - 1:1}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'Alvará\_Sanitario', foi inserido o atributo 'Hospitais', que é a chave principal de Alvará Sanitário e que referencia a chave 'Empresa' da tabela 'Hospitais'. Essa é uma forma plausível de se mapear esse relacionamento, uma vez que Alvará Sanitário é entidade fraca de Hospitais e possui como identificador único a chave 'Hospitais', além de garantir que o hospital possui somente um alvará sanitário, e que cada alvará emitido tenha sido feito para somente um hospital. 
+
+            \item \textbf{Vantagens}: As vantagens dessa escolha é que preserva a cardinalidade 1:1 do relacionamento e garante a participação total de Alvará Sanitário no relacionamento.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Não foram identificadas formas alternativas, por conta do identificador de Alvará Sanitário ser a chave principal de Hospitais.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'emite' entre Agência da Secretaria da Saúde e Alvará Sanitário - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'Alvara\_Sanitario', foi inserido o atributo (not null) 'Agencia\_Saude', referenciando a chave 'Nome' da tabela 'Agencia\_Saude'. Isso permite que a Agência da Secretaria da Saúde seja responsável por emitir vários alvarás, mas que cada alvará sanitário tenha sido emitido por uma única Agência da Secretaria da Saúde. 
+
+            \item \textbf{Vantagens}:  As vantagens dessa escolha é que preserva a cardinalidade 1:N do relacionamento, garante a participação total de Alvará Sanitário no relacionamento, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Uma alternativa seria criar uma tabela extra contendo uma chave composta por dois atributos, em que um atributo referencia a chave da tabela Alvara\_Sanitario e outro atributo referencia a chave da tabela Agencia\_Saude. No entanto, essa alternativa aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional. Além de não garantir a participação total de Alvará Sanitário no relacionamento.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'autoriza' entre CRM e Médico - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Na tabela 'Medico', foi inserido o atributo (not null) 'CRM', referenciando a chave 'IdCRM' da tabela 'CRM'. Isso permite que o CRM(Conselho Regional de Medicina) seja responsável por emitir vários documentos CRM, mas que cada documento tenha sido emitido por um único Conselho Regional de Medicina. 
+
+            \item \textbf{Vantagens}:  As vantagens dessa escolha é que preserva a cardinalidade 1:N do relacionamento, garante a participação total de Médico no relacionamento, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Uma alternativa seria criar uma tabela extra contendo uma chave composta por dois atributos, em que um atributo referencia a chave ID artificial da tabela CRM e outro atributo referencia a chave da tabela Medico. No entanto, essa alternativa aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional. Além de não garantir a participação total de Médico no relacionamento.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'Trabalha' entre Carteira de Trabalho e Empresa - N:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi criada a uma tabela para a agregação 'Contrato' com uma chave composta por 'Numero', 'CarteiraTrabalho' que referencia a chave da tabela 'Carteira\_Trabalho' e 'Empresa' que referencia a chave da tabela 'Empresa'. 
+
+            \item \textbf{Vantagens}: A principal vantagem de termos criado uma tabela a parte para a agregação Contrato, é que facilita o mapeamento do relacionamento entre Contrato e Exame Admissional, além de preservar a cardinalidade N:N do relacionamento.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Não foram identificadas alternativas.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'Pertence à' entre a agregação Contrato e Exame Admissional - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi inserido na tabela de Exame\_Admissional três atributos 'Contrato', 'Cidadao' e 'Empresa' como chaves secundárias de Exame\_Admissional, e que referencia a chave composta da tabela 'Contrato'. Isso permite que um contrato possua diversos exames admissionais, mas que cada exame admissional feito pertence a um único contrato. 
+
+            \item \textbf{Vantagens}: As vantagens dessa escolha é que preserva a cardinalidade 1:N do relacionamento, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: A principal desvantagem nessa solução seria a presença de valores nulos.
+
+            \item \textbf{Alternativas}: Uma alternativa seria criar uma tabela extra contendo uma chave composta por quatro atributos, em que três atributos referenciam a chave composta da tabela Contrato e o outro atributo referencia a chave da tabela Exame\_Admissional. No entanto, essa alternativa aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional.
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'Agenda' entre Cidadão e Hospitais - N:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi criada uma tabela nova 'Consulta' para a agregação 'Consulta' tendo uma chave artificial 'ID' que substitui a chave composta por 'Cidadao', referenciando a chave da tabela 'Cidadao', 'Hospital', referenciando a chave 'Empresa' da tabela 'Hospitais', e a chave 'Data\_Hora' que indica a data e a hora da consulta.
+
+            \item \textbf{Vantagens}: Preserva a cardinalidade N:N do relacionamento, facilita posteriormente o mapeamento do relacionamento ternário entre consulta, exame e médico e permite que vários agendamentos sejam feitos pelo cidadão a vários hospitais.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Não foram identificadas alternativas. 
+        \end{itemize}
+
+        \item \textbf{Relacionamento 'realiza' entre Médico e Consulta - 1:N}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Foi inserido na tabela de Consulta um atributo 'Medico'(not null) que referencia a chave principal da tabela 'Medico'. Isso permite que um médico seja responsável por realizar diversas consultas, mas que cada consulta seja feita por um único médico. 
+
+            \item \textbf{Vantagens}: As vantagens dessa escolha é que preserva a cardinalidade 1:N do relacionamento, garante a participação total de Consulta no relacionamento, ao passo que evita a repetição de dados redundantes.
+            
+            \item \textbf{Desvantagem}: Não foram identificadas desvantagens.
+
+            \item \textbf{Alternativas}: Uma alternativa seria criar uma tabela extra contendo uma chave composta por dois atributos, em que um atributo referencia a chave ID artificial da tabela Consulta e o outro atributo referencia a chave da tabela Medico. No entanto, essa alternativa aumentaria o número de tabelas e de joins necessários, o que encarece o custo computacional. Além de não garantir a participação total de Consulta no relacionamento.
+        \end{itemize}
+
+        \item \textbf{Mapeamento de Entidade Fraca entre Exame\_Psicotecnico/Medico\_CNH/\\Toxicologico/Admissional e Consulta - 1:1}
+        \begin{itemize} 
+            \item \textbf{Solução adotada}: Para cada uma das tabelas presentes em nosso esquema: 'Exame\_Psicotecnico', 'Exame\_Toxicologico', 'Exame\_Medico\_CNH' e \\'Exame\_Admissional', foi adicionada a chave principal 'Consulta' referenciando a chave ID artificial da tabela 'Consulta'. Essa é uma forma plausível de se mapear esses relacionamentos, uma vez que Exame é entidade fraca de Consulta, além de garantir que cada exame está associado a uma única consulta e que em cada consulta é realizado somente um exame.
+
+            \item \textbf{Vantagens}: As vantagens dessa escolha é que preserva a cardinalidade 1:1 do relacionamento e garante a participação total do Exame no relacionamento. 
+            
+            \item \textbf{Desvantagem}: Não foram identificados desvantagens.
+
+            \item \textbf{Alternativas}: Não foram identificadas formas alternativas, por conta do identificador de Exame\_Psicotecnico/Medico\_CNH/Toxicologico/Admissional ser a chave principal de Consulta.
+        \end{itemize}
+\end{enumerate}
+
+\subsection{Mudanças Relacionadas à Segunda Entrega}
+
+Diversas inconsistências relacionadas à segunda entrega foram apontadas pelo monitor da disciplina. Muitos erros passaram despercebidos pelos integrantes do grupo e, portanto, realizamos diversas modificações ao longo dos esquemas e do relatório. Abaixo segue uma lista de todas as modificações feitas:
+
+\begin{itemize}
+    \item \textbf{Alteração nas tabelas Unidade\_MTE e CRM}: Em ambas as tabelas Rua, Número e Bairro foram alterados para chaves secundárias NOT NULL. Dessa forma, a notação da chave está de acordo com o que foi feito no MER e com as regras relacionadas ao uso de ID artificial. Também foi adicionada chave secundária NOT NULL no atributo UF de CRM;
+
+    \item \textbf{NOT NULL em Medico tabela Cidadao}: Adicionamos o NOT NULL no atributo Medico da tabela Cidadao, o qual indica se o cidadão especializou ou não em médico;
+
+    \item \textbf{Mudança na tabela CNH}: Foi adicionada a chave secundária NOT NULL no atributo Cidadao, visando obedecer o mapeamento correto do relacionamento de cardinalidade 1:1 entre CNH e Cidadão;
+
+    \item \textbf{Mudança na tabela Detran}: Foi adicionado a chave secundária NOT NULL no atributo Estado, a fim de deixar claro que o DETRAN é um departamento identificado pelo Estado;
+
+    \item \textbf{Mudança na tabela Hospitais}: Foram trocado os nomes dos atributos Leitos e TipoAgendamentos para N° leitos e TipoAtendimento, respectivamente. O objetivo da mudança é deixar de acordo com o que foi feito no diagrama do MER;
+
+    \item \textbf{Mudança na tabela e no CE Alvará Sanitário}: Foi retirado a chave parcial Data tanto da entidade Alvará Sanitário presente no diagrama do MER quanto da tabela Alvará\_Sanitário presente no esquema Relacional. Agora Data é tratado como um atributo comum dessa entidade. Essa mudança foi feita para preservar a cardinalidade 1:1 do relacionamento de Alvará Sanitário com Hospitais;
+
+    \item \textbf{Mudança na cardinalidade do relacionamento entre Carteira de Trabalho e Empresa}: A cardinalidade presente nesse relacionamento passou de 1:N para N:N, visto que uma empresa pode ter mais de um funcionário. Além disso, o mapeamento da agregação Contrato está, agora, correta, uma vez que preserva a cardinalidade N:N;
+
+    \item \textbf{Quebra do relacionamento ternário entre Médico, Exame e Consulta}: O relacionamento ternário entre essas entidades agora foi dividido em dois binários: Médico - Consulta e Exame - Consulta. Essa mudança foi feita tanto no diagrama do MER, quanto no esquema Relacional;
+
+    \item \textbf{Remoção da ID parcial do CE Exame}: Optamos por remover a chave parcial ID Exame presente na entidade Exame no diagrama do MER. Agora Exame é inteiramente identificado pela chave Data/Hora da Consulta, a qual o Exame é entidade fraca;
+
+    \item \textbf{Mudanças nas tabelas Exame\_Pisicotecnico/Toxicologico/ \\Medico\_CNH/Admissional}: Com a quebra do relacionamento ternário entre Exame, Médico e Consulta, e remoção da chave parcial de Exame, foram retiradas as chaves ID e Medico, referenciando a chave da tabela Medico, de todas as tabelas de Exame. Agora as tabelas de Exame são identificadas apenas pela chave estrangeira Consulta que referencia a chave da tabela Consulta;
+
+    \item \textbf{Adição de atributo Medico em Consulta}: Com a quebra do relacionamento ternário entre as entidades Exame, Medico e Consulta, criou-se um binário entre Consulta e Médico. Dessa forma, foi adicionado um atributo Medico NOT NULL referenciando a chave da tabela Medico, a fim de mapear corretamente o relacionamento 1:N entre essas entidades;
+
+    \item \textbf{Pequenas alterações na seção 2.4}: Com a quebra do relacionamento ternário entre as entidades Exame, Médico e Consulta e o surgimento de dois binários, foram necessários fazer pequenas adaptações na análise de ciclos da seção 2.4; 
+
+    \item \textbf{Mudanças na seção 2.1}: Mudanças foram feitas na seção 2.1 - Levantamento de Requisitos, a fim de se adequar as mudanças realizadas no diagrama do MER como, por exemplo, a alteração das chaves da entidade Exame;
+
+    \item \textbf{Mudanças na seção 3.2}: Diversas mudanças foram feitas em diversos itens da seção 3.2 de justificativas. Abaixo está uma lista dos itens que sofreram alteração e a respectiva alteração feita:
+            \begin{itemize}
+                \item \textbf{Item 1}: Foi adicionado mais desvantagem;
+                \item \textbf{Item 3}: Foi alterado informações no texto de 'solução adotada', além de adicionar uma desvantagem;
+                \item \textbf{Item 9, 15 e 21}: Foi adicionado uma desvantagem e alterado a informação da alternativa ao mapeamento feito nesses relacionamentos 1:N em cada um desses itens;
+                \item \textbf{Item 10}: Foi alterado o título do mapeamento para 'Mapeamento de Entidade Fraca';
+                \item \textbf{Item 13, 18 e 19}: Foi alterado a informação da alternativa ao mapeamento feito nesses relacionamentos 1:N em cada item;
+                \item \textbf{Item 14}: Foi alterado o título para 'Mapeamento da Entidade Fraca';
+                \item \textbf{Item 17}: Foi alterado o título do mapeamento para 'Mapeamento de Entidade Fraca', além de retirar a informação da chave parcial 'Data' previamente escrito na 'solução adotada';
+                \item \textbf{Item 20}: Foi alterado a cardinalidade do relacionamento desse item de 1:N para N:N, além de ter sido feitas outras alterações nos textos de 'solução adotada', 'vantagens', 'desvantagens' e 'alternativas';
+                \item \textbf{Item 22}: Foi tirada a desvantagem, uma vez que não há alternativas ao mapeamento;
+                \item \textbf{Item 23 e 24}: Os itens 23 e 24 surgiram a partir do item 23 em decorrência da quebra do relacionamento ternário previamente explicado. Agora o item 23 justifica as escolhas do relacionamento entre Médico e Consulta, enquanto o 24 justifica as escolhas do relacionamento entre os Exames e a Consulta. 
+            \end{itemize}
