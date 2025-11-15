@@ -1,104 +1,118 @@
 # gerenciador-exames-bd
 
-## Estrutura Atual do Projeto
+## Estrutura do Projeto
 
 ```
-gerenciador-exames-bd/
+gerenciamento_exames/
 │
 ├── sql/
-│   ├── esquema.sql          # Schema completo do banco (tabelas, índices, etc)
-│   └── dados.sql            # Dados de exemplo/teste
+│   ├── 01_criar_tabelas.sql
+│   ├── 02_criar_indices.sql
+│   ├── 03_restricoes_integridade.sql
+│   ├── 04_dados_iniciais.sql
+│   └── schema.sql 
 │
-├── main.py                  # Aplicação principal (menu interativo)
-└── README.md               # Este arquivo
+├── src/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── database.py
+│   ├── models/
+│   │   ├── cidadao.py
+│   │   ├── medico.py
+│   │   ├── hospital.py
+│   │   ├── exame.py
+│   │   ├── consulta.py
+│   │   ├── crm.py
+│   │   └── prontuario.py
+│   ├── repositories/
+│   │   ├── cidadao_repository.py
+│   │   ├── medico_repository.py
+│   │   ├── hospital_repository.py
+│   │   ├── exame_repository.py
+│   │   └── consulta_repository.py
+│   ├── services/
+│   │   ├── autenticacao_service.py
+│   │   ├── exame_service.py
+│   │   ├── consulta_service.py
+│   │   └── validacao_service.py
+│   ├── routes/
+│   │   ├── cidadao_routes.py
+│   │   ├── hospital_routes.py
+│   │   ├── exame_routes.py
+│   │   ├── governo_routes.py
+│   │   └── auth_routes.py
+│   └── utils/
+│       └── utils.py
+│
+├── tests/
+│   └── test.py
+│
+├── main.py
+├── requirements.txt
+└── README.md
 ```
+Sugestão da IA, não sei o que é metade disso ai
 
-## Descrição dos Arquivos
+## Explicação da estrutura
+### Pasta sql/ - Scripts de Banco de Dados 
 
-### **sql/esquema.sql**
-- **Propósito**: Define toda a estrutura do banco PostgreSQL
-- **Conteúdo**: 
-  - Criação de todas as tabelas (Cidadao, Medico, Hospital, Exame, etc.)
-  - Relacionamentos entre tabelas (foreign keys)
-  - Índices para otimização
-  - Constraints de integridade
-- **Como usar**: `sudo -u postgres psql -d sisdocs -f sql/esquema.sql`
+Escopo: Centraliza todos os scripts SQL do PostgreSQL, organizados em ordem de execução
+Relação: Estes arquivos são executados uma única vez durante a configuração inicial do banco. A aplicação Python fará leitura/escrita neste banco. 
 
-### **sql/dados.sql** 
-- **Propósito**: Insere dados de exemplo para testes
-- **Conteúdo**:
-  - Cidadãos de exemplo (Maria Silva, Carlos Oliveira)
-  - CRMs, médicos, hospitais
-  - Prontuários, alergias, tratamentos
-- **Como usar**: `sudo -u postgres psql -d sisdocs -f sql/dados.sql`
+### Pasta src/ - Código-Fonte Principal 
 
-### **main.py / mainCopy.py**
-- **Propósito**: Interface de linha de comando para o sistema
-- **Funcionalidades**:
-  - Conecta com PostgreSQL usando psycopg2
-  - Menu interativo para cadastrar cidadãos
-  - Consultar exames por CPF
-  - Gerenciar dados do sistema
-- **Como usar**: `python3 main.py`
+Este é o coração da aplicação[2]. Aqui fica toda a lógica da aplicação. Vou detalhar cada subpasta: 
+#### config.py - Configurações Globais 
 
-## Configuração e Execução
+Escopo: Define variáveis de ambiente e configurações da aplicação. 
+Relação: É importado por database.py para conectar ao banco e pela aplicação principal para definir comportamentos. 
 
-### **1. Pré-requisitos**
-```bash
-# Instalar PostgreSQL
-sudo apt install postgresql postgresql-contrib
+#### database.py - Gerenciador de Conexão 
 
-# Instalar dependência Python
-sudo apt install python3-psycopg2
-```
+Escopo: Estabelece e gerencia a conexão com PostgreSQL
+Relação: É utilizado por todos os repositories. Cada repository recebe uma instância do Database para executar operações. 
 
-### **2. Configurar Banco de Dados**
-```bash
-# Criar database
-sudo -u postgres createdb sisdocs
+### Pasta models/ - Definições de Dados 
 
-# Definir senha do usuário postgres
-sudo -u postgres psql
-ALTER USER postgres PASSWORD '1402';
-\q
+Escopo: Definem a estrutura das entidades do sistema (não são modelos ORM, mas representações das tabelas)[3]. 
+Relação: São usados pelos repositories para estruturar dados antes de salvar no banco ou depois de recuperar. 
 
-# Executar schema
-sudo -u postgres psql -d sisdocs -f sql/esquema.sql
+### Pasta repositories/ - Acesso a Dados 
 
-# Inserir dados de teste (opcional)
-sudo -u postgres psql -d sisdocs -f sql/dados.sql
-```
+Escopo: Implementam o padrão Repository, abstraindo operações SQL
+Relação:  
+- Recebem uma instância de Database no construtor
+- Usam models/ para estruturar dados
+- São consumidos pelos services/
+     
+### Pasta services/ - Lógica de Negócio 
 
-### **3. Executar Aplicação**
-```bash
-# Definir senha como variável de ambiente
-export DB_PASS=1402
+Escopo: Implementam as regras de negócio da aplicação. Orquestram múltiplos repositories
+Relação: 
+- Recebem múltiplos repositories (injeção de dependência)
+- Implementam a lógica que a aplicação precisa
+- São chamados pelos routes/
+     
+### Pasta routes/ - Endpoints da API 
 
-# Executar programa
-python3 main.py
-```
+Escopo: Define os endpoints HTTP que os usuários acessam[2]. 
+Relação: 
+- Recebem requests HTTP dos usuários
+- Chamam services/ para processar
+- Retornam responses HTTP
 
-## Dados de Teste Disponíveis
+### Pasta utils/ - Utilitários 
 
-Após executar `dados.sql`, você pode testar com:
-- **CPF**: `11122233344` (Maria Silva)
-- **CPF**: `22233344455` (Carlos Oliveira - médico)
+Escopo: Funções auxiliares compartilhadas pela aplicação. 
+Relação: Importados por services/ e routes/ conforme necessário. 
 
-## Conexão com Banco
+### Pasta tests/ - Testes Automatizados 
 
-A aplicação se conecta usando estas configurações (definidas em `main.py`):
-- **Host**: localhost
-- **Porta**: 5432 
-- **Database**: sisdocs
-- **Usuário**: postgres
-- **Senha**: definida via variável `DB_PASS` ou prompt interativo
+Escopo: Testes unitários e de integração
+Relação: Executados durante desenvolvimento para garantir que services/ e repositories/ funcionam corretamente. 
 
-## Arquitetura Atual
+### Arquivos Raiz 
 
-Esta é uma **aplicação simples monolítica** com:
-- Interface de linha de comando (CLI)
-- Conexão direta com PostgreSQL
-- Operações básicas de CRUD
-- Estrutura de banco normalizada
-
-**Observação**: O README anterior mostrava uma arquitetura mais complexa com Flask, APIs REST, e separação em camadas que ainda não foi implementada neste
+#### main.py - Inicializa a aplicação Flask 
+#### env - Variáveis de ambiente  
+#### requirements.txt - Dependências Python
