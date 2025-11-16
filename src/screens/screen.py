@@ -1,6 +1,7 @@
 from enum import Enum
 import os
 
+
 class State(Enum):
     WELCOME = 1
     LOGIN = 2
@@ -8,12 +9,14 @@ class State(Enum):
     WHO = 4
     CITIZEN = 5
 
+
 def clear():
     # Windows usa 'cls', Linux e Mac usam 'clear'
-    if os.name == 'nt':
-        os.system('cls')
+    if os.name == "nt":
+        os.system("cls")
     else:
-        os.system('clear')
+        os.system("clear")
+
 
 class Screen:
     def __init__(self):
@@ -21,7 +24,7 @@ class Screen:
 
     def draw_welcome(self):
         clear()
-        
+
         print("|----------------|")
         print("|    Bem Vindo   |")
         print("|----------------|")
@@ -49,7 +52,7 @@ class Screen:
 
     def draw_login(self, who):
         clear()
-        
+
         print("|----------------|")
         print("|     Entrar     |")
         print("|----------------|")
@@ -58,19 +61,18 @@ class Screen:
 
         self.state = State.LOGIN
 
-        if who == 1:   #cidadao
+        if who == 1:  # cidadao
             user = input("CPF: ")
             password = input("Senha: ")
             return user, password
 
-        if who == 2:   #Governo
+        if who == 2:  # Governo
             user = input("Tipo de instituicao: ")
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
             return user, cnpj, password
 
-        
-        if who == 3:   #Governo
+        if who == 3:  # Governo
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
             return cnpj, password
@@ -78,31 +80,29 @@ class Screen:
         input("ERROR: opcao invalida")
         return
 
-
     def draw_sign_up(self, who):
         clear()
-        
+
         print("|----------------|")
         print("|    Cadastro    |")
         print("|----------------|")
 
         print()
 
-        if who == 1:    #Cidadao
+        if who == 1:  # Cidadao
             user = input("Usuario: ")
             password = input("Senha: ")
 
             return user, password
 
-        if who == 2:   #Governo
+        if who == 2:  # Governo
             user = input("Tipo de instituicao: ")
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
 
             return user, cnpj, password
 
-        
-        if who == 3:   #hospital
+        if who == 3:  # hospital
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
 
@@ -110,7 +110,6 @@ class Screen:
 
         input("ERROR: opcao invalida")
         return
-
 
         self.state = State.SING_UP
 
@@ -129,7 +128,7 @@ class Screen:
         print("[5]: Marcar consulta")
         print("[6]: Cancelar consulta")
         print("[7]: Voltar para o inicio")
-        
+
         self.state = State.CITIZEN
 
     def draw_government(self):
@@ -142,7 +141,7 @@ class Screen:
         print()
         print("[1]: OPCOES QUE O GOVERNO PODERIA FAZER")
         print("[2]: Voltar para o inicio")
-        
+
         self.state = State.CITIZEN
 
     def draw_hospital(self):
@@ -156,7 +155,7 @@ class Screen:
         print("[1]: Listar exames do hospital")
         print("[2]: Confirmar exames do hospital")
         print("[3]: Voltar para o inicio")
-        
+
         self.state = State.CITIZEN
 
     def draw_exam_search(self):

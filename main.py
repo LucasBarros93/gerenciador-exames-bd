@@ -37,6 +37,9 @@ if __name__ == "__main__":
             search = 0
             search_type = 0
 
+            if option == 7:
+                break
+
             if option == 2:
                 Screen.draw_exam_search()
                 search_type = u.input_option(5)
@@ -54,14 +57,11 @@ if __name__ == "__main__":
 
                 Screen.draw_list_exams(exams)
 
-                exam = u.input_option(len(exams)+1)
+                exam = u.input_option(len(exams) + 1)
 
-                if exam == len(exams)+1:
+                if exam == len(exams) + 1:
                     continue
 
-            if option == 7:
-                break
-            
         # MAIN GOVERNMENT
         while who == 2:
             Screen.draw_government()
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             # Command.commands_government(option)
             if option == 2:
                 break
-            
+
         # HOSPITAL MAIN
         while who == 3:
             Screen.draw_hospital()
