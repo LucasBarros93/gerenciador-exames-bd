@@ -34,9 +34,17 @@ if __name__ == "__main__":
         while who == 1:
             Screen.draw_citizen()
             option = u.input_option(7)
-            # Command.commands_citizen(option)
-            if option == 1:
-                exams = Get.exams_from_citizen("Citizen")
+            search = 0
+
+            if option == 2:
+                Screen.draw_exam_search()
+                search_type = u.input_option(5)
+
+                print()
+                search = input("Digite a busca: ")
+
+            if option == 1 or option == 2:
+                exams = Get.exams_from_citizen("Citizen", search_type, search)
                 Screen.draw_list_exams(exams)
 
                 exam = u.input_option(len(exams)+1)
@@ -62,5 +70,3 @@ if __name__ == "__main__":
             # Command.commands_hospital(option)
             if option == 3:
                 break
-            
-

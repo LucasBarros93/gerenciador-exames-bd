@@ -4,7 +4,7 @@ class GET:
     def __init__(self):
         pass
     
-    def exams_from_citizen(self, Cidadao):
+    def exams_from_citizen(self, Cidadao, search_type, search):
         exams = []
 
         # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente

@@ -159,6 +159,22 @@ class Screen:
         
         self.state = State.CITIZEN
 
+    def draw_exam_search(self):
+        clear()
+
+        print("|------------------|")
+        print("|-Pelo que buscar?-|")
+        print("|------------------|")
+
+        print()
+        print("[1]: Id")
+        print("[2]: Tipo de exame")
+        print("[3]: Medico")
+        print("[4]: Consulta")
+        print("[5]: Data do exame")
+
+        self.state = State.CITIZEN
+
     def draw_list_exams(self, exams):
         clear()
 
