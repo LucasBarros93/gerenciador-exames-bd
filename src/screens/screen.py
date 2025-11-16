@@ -188,6 +188,17 @@ class Screen:
 
         print(f"[{len(exams)+1}]: Voltar")
 
+    def draw_404(self):
+        clear()
+
+        print("|----------------|")
+        print("|-Não encontrado-|")
+        print("|----------------|")
+
+        print()
+        print("Enter para voltar")
+
+
 if __name__ == "__main__":
     Screen = Screen()
     Screen.draw_sing_up()

@@ -35,6 +35,7 @@ if __name__ == "__main__":
             Screen.draw_citizen()
             option = u.input_option(7)
             search = 0
+            search_type = 0
 
             if option == 2:
                 Screen.draw_exam_search()
@@ -45,12 +46,18 @@ if __name__ == "__main__":
 
             if option == 1 or option == 2:
                 exams = Get.exams_from_citizen("Citizen", search_type, search)
+
+                if len(exams) == 0:
+                    Screen.draw_404()
+                    input()
+                    continue
+
                 Screen.draw_list_exams(exams)
 
                 exam = u.input_option(len(exams)+1)
 
-                if(exam == len(exams)+1):
-                    pass
+                if exam == len(exams)+1:
+                    continue
 
             if option == 7:
                 break
