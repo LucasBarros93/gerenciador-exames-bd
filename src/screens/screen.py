@@ -153,10 +153,22 @@ class Screen:
         print("|-----------------|")
 
         print()
-        print("[1]: OPCOES QUE O HOSPITAL PODERIA FAZER")
-        print("[2]: Voltar para o inicio")
+        print("[1]: Listar exames do hospital")
+        print("[2]: Confirmar exames do hospital")
+        print("[3]: Voltar para o inicio")
         
         self.state = State.CITIZEN
+
+    def draw_list_exams(self, exams):
+        clear()
+
+        print("|-----------------|")
+        print("|-Lista de Exames-|")
+        print("|-----------------|")
+
+        print()
+        for i in range(len(exams)):
+            print(f"[{i+1}]: {exams.__str__()}")
 
 if __name__ == "__main__":
     Screen = Screen()

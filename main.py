@@ -47,9 +47,9 @@ if __name__ == "__main__":
         # HOSPITAL MAIN
         while who == 3:
             Screen.draw_hospital()
-            option = u.input_option(2)
+            option = u.input_option(3)
             # Command.commands_hospital(option)
-            if option == 2:
+            if option == 3:
                 break
             
 
