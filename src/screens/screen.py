@@ -45,7 +45,7 @@ class Screen:
 
         print()
         print("[1]: Cidadao")
-        print("[2]: Governo")
+        print("[2]: Instituição governamental")
         print("[3]: Hospital")
 
         self.state = State.WHO
