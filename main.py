@@ -56,10 +56,32 @@ if __name__ == "__main__":
                     continue
 
                 Screen.draw_list_exams(exams)
-
                 exam = u.input_option(len(exams) + 1)
 
                 if exam == len(exams) + 1:
+                    continue
+
+            if option == 4:
+                Screen.draw_consultation_search()
+                search_type = u.input_option(3)
+
+                print()
+                search = input("Digite a busca: ")
+
+            if option == 3 or option == 4:
+                consultations = Get.consultations_from_citizen(
+                    "Citizen", search_type, search
+                )
+
+                if len(consultations) == 0:
+                    Screen.draw_404()
+                    input()
+                    continue
+
+                Screen.draw_list_consultations(consultations)
+                consultation = u.input_option(len(consultations) + 1)
+
+                if consultation == len(consultations) + 1:
                     continue
 
         # MAIN GOVERNMENT

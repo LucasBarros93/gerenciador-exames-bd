@@ -187,6 +187,33 @@ class Screen:
 
         print(f"[{len(exams)+1}]: Voltar")
 
+    def draw_list_consultations(self, consultations):
+        clear()
+
+        print("|--------------------|")
+        print("|-Lista de Consultas-|")
+        print("|--------------------|")
+
+        print()
+        for i in range(len(consultations)):
+            print(f"[{i+1}]: {consultations[i].__str__()}")
+
+        print(f"[{len(consultations)+1}]: Voltar")
+
+    def draw_consultation_search(self):
+        clear()
+
+        print("|------------------|")
+        print("|-Pelo que buscar?-|")
+        print("|------------------|")
+
+        print()
+        print("[1]: Id")
+        print("[2]: Hospital")
+        print("[3]: Data")
+
+        self.state = State.CITIZEN
+
     def draw_404(self):
         clear()
 

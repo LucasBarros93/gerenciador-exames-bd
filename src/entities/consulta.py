@@ -2,16 +2,18 @@ from datetime import datetime
 
 
 class Consulta:
-    def __init__(self, cidadao_fk, hospital_fk, data_hora, medico_fk=None, motivo=None):
-        self.id_consulta = None
+    def __init__(
+        self, id, cidadao_fk, hospital_fk, data_hora, medico_fk=None, motivo=None
+    ):
+        self.id_consulta = id
         self.cidadao_fk = cidadao_fk
         self.hospital_fk = hospital_fk
-        self.data_hora = data_hora
+        self.data_hora = datetime.strptime(data_hora, "%d-%m").date()
         self.medico_fk = medico_fk
         self.motivo = motivo
 
     def __str__(self):
-        return f"Consulta(ID: {self.id_consulta}, Data: {self.data_hora}, Motivo: {self.motivo})"
+        return f"Consulta(ID: {self.id_consulta}, Hospital: {self.hospital_fk} Data: {self.data_hora.strftime("%d.%m")})"
 
     def to_dict(self):
         return {
