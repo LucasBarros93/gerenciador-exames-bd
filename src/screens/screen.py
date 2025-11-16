@@ -168,7 +168,9 @@ class Screen:
 
         print()
         for i in range(len(exams)):
-            print(f"[{i+1}]: {exams.__str__()}")
+            print(f"[{i+1}]: {exams[i].__str__()}")
+
+        print(f"[{len(exams)+1}]: Voltar")
 
 if __name__ == "__main__":
     Screen = Screen()

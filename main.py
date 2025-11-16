@@ -5,9 +5,11 @@ from src.utils import utils as u
 if __name__ == "__main__":
     while True:
         Screen = screen.Screen()
-        Command = commands.Commands()
-        Screen.draw_welcome()
 
+        Get = commands.GET()
+        Post = commands.POST()
+
+        Screen.draw_welcome()
         option = u.input_option(3)
 
         # QUIT
@@ -33,6 +35,15 @@ if __name__ == "__main__":
             Screen.draw_citizen()
             option = u.input_option(7)
             # Command.commands_citizen(option)
+            if option == 1:
+                exams = Get.exams_from_citizen("Citizen")
+                Screen.draw_list_exams(exams)
+
+                exam = u.input_option(len(exams)+1)
+
+                if(exam == len(exams)+1):
+                    pass
+
             if option == 7:
                 break
             

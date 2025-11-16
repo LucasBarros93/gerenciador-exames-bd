@@ -1,19 +1,19 @@
 from datetime import datetime
 
 class ExameMedicoCNH:
-    def __init__(self, consulta_fk, medico_fk, resultado=None, usa_oculos=False, pcd=False, data_exame=None, unidade_fk=None, detran_fk=None):
-        self.id = None
+    def __init__(self, id, consulta_fk, medico_fk, resultado=None, usa_oculos=False, pcd=False, data_exame=None, unidade_fk=None, detran_fk=None):
+        self.id = id
         self.consulta_fk = consulta_fk
         self.medico_fk = medico_fk
         self.resultado = resultado
         self.usa_oculos = usa_oculos
         self.pcd = pcd
-        self.data_exame = data_exame or datetime.now().date()
+        self.data_exame = datetime.strptime(data_exame, '%d-%m').date()
         self.unidade_fk = unidade_fk
         self.detran_fk = detran_fk
     
     def __str__(self):
-        return f"ExameMedicoCNH(ID: {self.id}, Resultado: {self.resultado}, Data: {self.data_exame})"
+        return f"ExameMedicoCNH(ID: {self.id}, Consulta: {self.consulta_fk}, Medico: {self.medico_fk})"
     
     def to_dict(self):
         return {
