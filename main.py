@@ -84,6 +84,15 @@ if __name__ == "__main__":
                 if consultation == len(consultations) + 1:
                     continue
 
+            if option == 5:
+                hospital, date, hour = Screen.draw_schedule() 
+                # Post.consultation(hospital, date, hour)
+                # check if the hospital exists
+                print()
+                print("Consulta agendada, aguarde confirmação do hospital")
+                input()
+                
+
         # MAIN GOVERNMENT
         while who == 2:
             Screen.draw_government()

@@ -224,6 +224,21 @@ class Screen:
         print()
         print("Enter para voltar")
 
+    def draw_schedule(self):
+        clear()
+
+        print("|-----------------|")
+        print("|-Marcar consulta-|")
+        print("|-----------------|")
+
+        print()
+
+        hospital = input("Hospital: ")
+        date = input("Data: ")
+        hour = input("Hora: ")
+
+        return hospital, date, hour
+
 
 if __name__ == "__main__":
     Screen = Screen()
