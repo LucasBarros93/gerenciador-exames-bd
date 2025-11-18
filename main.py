@@ -2,6 +2,8 @@ from src.commands import commands
 from src.screens import screen
 from src.utils import utils as u
 
+from datetime import datetime
+
 if __name__ == "__main__":
     while True:
         Screen = screen.Screen()
@@ -88,9 +90,30 @@ if __name__ == "__main__":
                 hospital, date, hour = Screen.draw_schedule() 
                 # Post.consultation(hospital, date, hour)
                 # check if the hospital exists
+                Post.schedule_consultation()
                 print()
                 print("Consulta agendada, aguarde confirmação do hospital")
                 input()
+
+            if option == 6:
+                # NOTE: filtrariasse por consultas ate a data de hj
+                consultations = Get.consultations_from_citizen(
+                    "Citizen", search_type, search
+                ) 
+
+                if len(consultations) == 0:
+                    Screen.draw_404()
+                    input()
+                    continue
+
+                Screen.draw_list_consultations(consultations)
+
+                print()
+                print("Qual consulta deseja cancelar?")
+
+                cancel = u.input_option(len(consultations)+1)
+
+                Post.delete_consultation()
                 
 
         # MAIN GOVERNMENT
@@ -108,3 +131,23 @@ if __name__ == "__main__":
             # Command.commands_hospital(option)
             if option == 3:
                 break
+
+            if option == 1:
+                # buscando as ainda n realizadas
+                exams = Get.exams_from_hospital("unimed", date=True) 
+
+            if option == 2:
+                # buncando as não confirmadas
+                exams = Get.exams_from_hospital("unimed", to_verify=True)
+
+            if len(exams) == 0:
+                Screen.draw_404()
+                input()
+                continue
+
+            Screen.draw_list_exams(exams)
+            exam = u.input_option(len(exams) + 1)
+
+            if exam == len(exams) + 1:
+                continue
+

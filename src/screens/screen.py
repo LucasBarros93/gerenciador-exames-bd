@@ -139,7 +139,7 @@ class Screen:
         print("|-----------------|")
 
         print()
-        print("[1]: OPCOES QUE O GOVERNO PODERIA FAZER")
+        print("[1]: Desenvolvimento em beta, opcoes de governo ainda nao implemntadas")
         print("[2]: Voltar para o inicio")
 
         self.state = State.CITIZEN
@@ -152,7 +152,7 @@ class Screen:
         print("|-----------------|")
 
         print()
-        print("[1]: Listar exames do hospital")
+        print("[1]: Listar exames marcados do hospital")
         print("[2]: Confirmar exames do hospital")
         print("[3]: Voltar para o inicio")
 
