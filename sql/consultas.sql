@@ -111,7 +111,7 @@ SELECT
 FROM hospital h 
 LEFT JOIN consulta con ON con.hospital = h.empresa -- Considera hospitais que não houveram nenhuma consulta em um determinado ano
 GROUP BY h.empresa, EXTRACT(YEAR FROM con.data_hora)
-ORDER BY EXTRACT(YEAR FROM con.data_hora), hospital_id DESC; -- Ordena por ano e por id do hospital
+ORDER BY hospital_id, EXTRACT(YEAR FROM con.data_hora) DESC; -- Ordena por ano e por id do hospital
 
 
 
