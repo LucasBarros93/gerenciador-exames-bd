@@ -25,7 +25,7 @@ JOIN
          GROUP BY hospital
      ) AS base_calculo
     ) AS M
-    ON T.total_prontuarios > M.media_global;
+    ON T.total_prontuarios > M.media_global
     ORDER BY T.total_prontuarios DESC; -- Ordena pelo volume de acessos ao prontuário, do maior para o menor.
 
 -----------------------------------------------------------------------------------------------
@@ -111,10 +111,46 @@ SELECT
 FROM hospital h 
 LEFT JOIN consulta con ON con.hospital = h.empresa -- Considera hospitais que não houveram nenhuma consulta em um determinado ano
 GROUP BY h.empresa, EXTRACT(YEAR FROM con.data_hora)
-ORDER BY hospital_id, EXTRACT(YEAR FROM con.data_hora) DESC; -- Ordena por ano e por id do hospital
+ORDER BY id_hospital, EXTRACT(YEAR FROM con.data_hora) DESC; -- Ordena por ano e por id do hospital
 
 
 
+-----------------------------------------------------------------------------------------------
+-- CONSULTA 5: OBTÉM, PARA OS CIDADÃOS DESEMPREGADOS, A PORCENTAGEM DE CADA FAIXA ETÁRIA PARA QUE POSSUI CNH
+-----------------------------------------------------------------------------------------------
 
--- BUSCA 5:
-    -- Case when para dividir a faixa etaria de motoristas de CNH (pode ser porcentagem também) e desempregados
+SELECT 
+    CASE 
+       WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 18 AND 25 THEN '1. Jovem (18-25)'
+       WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 26 AND 35 THEN '2. Adulto Jovem (26-35)'
+       WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 36 AND 50 THEN '3. Adulto (36-50)'
+       WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 51 AND 65 THEN '4. Adulto Maduro (50-65)'
+       WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) > 65 THEN '5. Idoso (65+)'
+    END AS faixa_etaria,
+
+    COUNT(*) AS numero_ocorrencias, -- conta as ocorrencias pra cada faixa etaria
+
+    ROUND(
+        (COUNT(*) * 100.0) / (  
+            SELECT COUNT(*)
+            FROM cnh carteira_total
+            JOIN cidadao c_total ON c_total.idcidadao = carteira_total.cidadao
+            WHERE NOT EXISTS (
+                SELECT *
+                FROM contrato ct_total
+                WHERE ct_total.carteira_trabalho = c_total.idcidadao
+                AND ct_total.demissao IS NULL
+            )
+        ), 
+    2) AS porcentagem_total
+
+FROM cnh carteira
+JOIN cidadao c ON c.idcidadao = carteira.cidadao
+WHERE NOT EXISTS (
+    SELECT *
+    FROM contrato ct
+    WHERE ct.carteira_trabalho = c.idcidadao 
+    AND ct.demissao IS NULL 
+) 
+GROUP BY faixa_etaria
+ORDER BY faixa_etaria;
