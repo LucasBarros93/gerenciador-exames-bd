@@ -346,5 +346,75 @@ INSERT INTO unidade_atendimento (detran, cidade, rua, numero, bairro) VALUES
 (5, 'Campos', 'Av Alberto Torres', 500, 'Centro'),
 (5, 'Macaé', 'Rua Direita', 180, 'Centro');
 
+-- ============================
+-- 18. CNH (5)
+-- ============================
+INSERT INTO cnh (cidadao, categoria, validade, numero_registro) VALUES
+(2, 'B', '2028-01-01', 'REG1001'),
+(3, 'A', '2027-05-10', 'REG1002'),
+(5, 'AB', '2029-03-20', 'REG1003'),
+(6, 'B', '2026-12-12', 'REG1004'),
+(8, 'A', '2027-08-18', 'REG1005');
+
+-- ============================
+-- 19. EXAME_PSICOTECNICO (5)
+-- ============================
+INSERT INTO exame_psicotecnico (consulta, validade, observacao, resultado, unidade, detran) VALUES
+(1,  '2027-01-10', 'Apto', true,  1, 4),
+(2,  '2027-02-12', 'Apto com restrições leves', true,  2, 4),
+(3,  '2028-03-15', 'Inapto', false, 3, 4),
+(4,  '2026-04-20', 'Apto', true,  4, 4),
+(5,  '2028-05-25', 'Apto', true,  5, 4);
+
+-- ============================
+-- 20. EXAME_TOXICOLOGICO (5)
+-- ============================
+INSERT INTO exame_toxicologico (consulta, validade, observacao, resultado, unidade, detran) VALUES
+(6,  '2026-06-10', 'Negativo', true,  6, 4),
+(7,  '2027-07-12', 'Negativo', true,  7, 4),
+(8,  '2027-08-18', 'Positivo para THC', false, 8, 4),
+(9,  '2027-09-22', 'Negativo', true,  9, 4),
+(10, '2028-10-30', 'Negativo', true, 10, 4);
+
+-- ============================
+-- 21. SUBSTANCIAS (5)
+-- ============================
+INSERT INTO substancias (exame_toxicologico, substancia) VALUES
+(6,  'THC'),
+(7,  'Cocaína'),
+(8,  'Anfetamina'),
+(9,  'Cafeína'),
+(10, 'Benzoilecgonina');
+
+-- ============================
+-- 22. EXAME_MEDICO_CNH (5)
+-- ============================
+INSERT INTO exame_medico_cnh (consulta, validade, observacao, resultado, pcd, usa_oculos, unidade, detran) VALUES
+(11, '2027-11-01', 'Apto', true, false, true,  11, 4),
+(12, '2028-12-10', 'Apto', true, false, false, 12, 4),
+(13, '2027-09-15', 'Inapto', false, true, true, 13, 4),
+(14, '2027-04-18', 'Apto', true, false, false, 14, 4),
+(15, '2028-02-20', 'Apto', true, false, true,  15, 4);
+
+-- ============================
+-- 23. AMETROPIAS (5)
+-- ============================
+INSERT INTO ametropias (exame_medico_cnh, tipo, grau_esquerdo, grau_direito) VALUES
+(11, 'Miopia',        -1.25, -1.00),
+(12, 'Hipermetropia',  1.50,  1.25),
+(13, 'Astigmatismo',  -0.75, -0.50),
+(14, 'Presbiopia',     1.00,  1.00),
+(15, 'Miopia',        -2.00, -1.75);
+
+-- ============================
+-- 24. EXAME_ADMISSIONAL (5)
+-- ============================
+INSERT INTO exame_admissional (consulta, validade, observacao, resultado, tipo, contrato, carteira_trabalho, empresa) VALUES
+(16, '2028-03-10', 'Apto', true, 'Admissional', 1, 1, 1),
+(17, '2028-04-12', 'Apto', true, 'Periódico',   2, 2, 2),
+(18, '2027-06-01', 'Apto', true, 'Admissional', 3, 3, 3),
+(19, '2027-07-15', 'Inapto', false, 'Retorno',  4, 4, 2),
+(20, '2028-09-30', 'Apto', true, 'Periódico',   5, 5, 6);
+
 
 COMMIT;
