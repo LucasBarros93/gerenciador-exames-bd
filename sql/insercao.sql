@@ -30,8 +30,6 @@ BEGIN;
 -- ============================
 -- 1. INSERIR CIDADÃOS BASE (10)
 -- ============================
-SAVEPOINT cidadaos;
-
 INSERT INTO idcidadao_cpf (cpf, nome) VALUES
 ('12345678901', 'Dr Carlos Silva'),
 ('23456789012', 'Maria Santos'),
@@ -56,13 +54,9 @@ INSERT INTO cidadao (idcidadao, nascimento, eh_medico) VALUES
 (9, '1983-06-08', false),  -- Diego
 (10, '1978-10-02', true);  -- Camila (médica)
 
-ROLLBACK TO cidadaos;
-
 -- ============================
 -- 2. UNIDADES MTE (10)
 -- ============================
-SAVEPOINT unidades_mte;
-
 INSERT INTO unidade_mte (nome, rua, numero, bairro) VALUES
 ('Unidade Central SP', 'Rua das Flores', 123, 'Centro'),
 ('Unidade Norte RJ', 'Av Brasil', 456, 'Tijuca'),
@@ -75,13 +69,10 @@ INSERT INTO unidade_mte (nome, rua, numero, bairro) VALUES
 ('Unidade Leste GO', 'Av Goiania', 369, 'Setor Sul'),
 ('Unidade Oeste CE', 'Rua Fortaleza', 741, 'Meireles');
 
-ROLLBACK TO unidades_mte;
 
 -- ============================
 -- 3. CARTEIRAS DE TRABALHO (10)
 -- ============================
-SAVEPOINT carteiras;
-
 INSERT INTO carteira_trabalho (cidadao, ultimaatt, tipo, unimte) VALUES
 (1, '2024-01-15', 'DIGITAL', 1),
 (2, '2024-02-20', 'DIGITAL', 2),
@@ -94,13 +85,10 @@ INSERT INTO carteira_trabalho (cidadao, ultimaatt, tipo, unimte) VALUES
 (9, '2024-09-08', 'FÍSICA', 9),
 (10, '2024-10-02', 'DIGITAL', 10);
 
-ROLLBACK TO carteiras;
 
 -- ============================
 -- 4. CONSELHOS REGIONAIS (10)
 -- ============================
-SAVEPOINT crms;
-
 INSERT INTO crm (uf, rua, numero, bairro) VALUES
 ('SP', 'Rua Augusta', 1200, 'Consolação'),
 ('RJ', 'Av Copacabana', 800, 'Copacabana'),
@@ -113,26 +101,20 @@ INSERT INTO crm (uf, rua, numero, bairro) VALUES
 ('GO', 'Av T4', 200, 'Setor Bueno'),
 ('CE', 'Av Beira Mar', 1100, 'Meireles');
 
-ROLLBACK TO crms;
 
 -- ============================
 -- 5. MÉDICOS (4 dos 10 cidadãos)
 -- ============================
-SAVEPOINT medicos;
-
 INSERT INTO medico (cidadao, especializacao, crm) VALUES
 (1, 'Cardiologia', 1),        -- Dr Carlos
 (4, 'Pediatria', 2),          -- Ana
 (7, 'Neurologia', 3),         -- Paulo
 (10, 'Ginecologia', 4);       -- Camila
 
-ROLLBACK TO medicos;
 
 -- ============================
 -- 6. EMPRESAS (10)
 -- ============================
-SAVEPOINT empresas;
-
 INSERT INTO idempresa_cnpj (cnpj, nome) VALUES
 ('12345678000101', 'Hospital SP LTDA'),
 ('12345678000202', 'Clinica RJ SA'),
@@ -157,24 +139,18 @@ INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo) VALUES
 (9, 'Clinicas SC', 'Av Atlantica', 700, 'Centro', 'Saúde'),
 (10, 'Hospital Ceará', 'Av Beira Mar', 900, 'Meireles', 'Saúde');
 
-ROLLBACK TO empresas;
 
 -- ============================
 -- 7. DETRANS (2)
 -- ============================
-SAVEPOINT detrans;
-
 INSERT INTO detran (empresa, estado) VALUES
 (4, 'SP'),  -- DETRAN SP
 (5, 'RJ');  -- DETRAN RJ
 
-ROLLBACK TO detrans;
 
 -- ============================
 -- 8. HOSPITAIS (8 dos 10)
 -- ============================
-SAVEPOINT hospitais;
-
 INSERT INTO hospital (empresa, nro_leitos, tipo_atendimento) VALUES
 (1, 200, 'Privado'),        -- Hospital SP
 (2, 80, 'Privado'),         -- Clinica RJ  
@@ -185,13 +161,10 @@ INSERT INTO hospital (empresa, nro_leitos, tipo_atendimento) VALUES
 (9, 90, 'Privado'),         -- Clinica SC
 (10, 180, 'Público');       -- Hospital CE
 
-ROLLBACK TO hospitais;
 
 -- ============================
 -- 9. AGÊNCIAS DE SAÚDE (10)
 -- ============================
-SAVEPOINT agencias;
-
 INSERT INTO agencia_saude (nome, rua, numero, bairro) VALUES
 ('ANVISA SP', 'Rua Consolacao', 1000, 'Centro'),
 ('ANVISA RJ', 'Av Rio Branco', 800, 'Centro'),
@@ -204,13 +177,10 @@ INSERT INTO agencia_saude (nome, rua, numero, bairro) VALUES
 ('ANVISA GO', 'Av T63', 900, 'Centro'),
 ('ANVISA CE', 'Av Dom Luis', 1200, 'Centro');
 
-ROLLBACK TO agencias;
 
 -- ============================
 -- 10. ALVARÁS SANITÁRIOS (8 hospitais)
 -- ============================
-SAVEPOINT alvaras;
-
 INSERT INTO alvara_sanitario (hospital, data_realizacao, agencia_saude) VALUES
 (1, '2024-01-15', 'ANVISA SP'),
 (2, '2024-02-20', 'ANVISA RJ'),
@@ -221,13 +191,10 @@ INSERT INTO alvara_sanitario (hospital, data_realizacao, agencia_saude) VALUES
 (9, '2024-07-25', 'ANVISA SC'),
 (10, '2024-08-14', 'ANVISA CE');
 
-ROLLBACK TO alvaras;
 
 -- ============================
 -- 11. PRONTUÁRIOS (10)
 -- ============================
-SAVEPOINT prontuarios;
-
 INSERT INTO prontuario (cidadao, criacao, ultima_att, historico) VALUES
 (1, '2020-01-10', '2024-11-20', 'Médico cardiologista sem comorbidades'),
 (2, '2021-03-15', '2024-11-18', 'Paciente com hipertensão controlada'),
@@ -240,13 +207,10 @@ INSERT INTO prontuario (cidadao, criacao, ultima_att, historico) VALUES
 (9, '2021-06-18', '2024-11-19', 'Histórico de ansiedade em tratamento'),
 (10, '2017-04-22', '2024-11-21', 'Médica ginecologista saudável');
 
-ROLLBACK TO prontuarios;
 
 -- ============================
 -- 12. TRATAMENTOS (30 total)
 -- ============================
-SAVEPOINT tratamentos;
-
 INSERT INTO tratamentos (prontuario, tratamento) VALUES
 (1, 'Aspirina 100mg'), (1, 'Atorvastatina 20mg'), (1, 'Exercicios cardiacos'),
 (2, 'Losartana 50mg'), (2, 'Hidroclorotiazida 25mg'), (2, 'Dieta hipossodica'),
@@ -259,13 +223,10 @@ INSERT INTO tratamentos (prontuario, tratamento) VALUES
 (9, 'Alprazolam 0.5mg'), (9, 'Psicoterapia'), (9, 'Relaxamento'),
 (10, 'Calcio com D3'), (10, 'Magnesio'), (10, 'Pilates');
 
-ROLLBACK TO tratamentos;
 
 -- ============================
 -- 13. ALERGIAS (20 total)
 -- ============================
-SAVEPOINT alergias;
-
 INSERT INTO alergia (prontuario, alergia) VALUES
 (1, 'Penicilina'), (1, 'Frutos do mar'),
 (2, 'AAS'), (2, 'Latex'),
@@ -278,13 +239,10 @@ INSERT INTO alergia (prontuario, alergia) VALUES
 (9, 'Aspirina'), (9, 'Contraste'),
 (10, 'Crustaceos'), (10, 'Pelo de gato');
 
-ROLLBACK TO alergias;
 
 -- ============================
 -- 14. CONSULTAS (20 total)
 -- ============================
-SAVEPOINT consultas;
-
 INSERT INTO consulta (cidadao, hospital, data_hora, medico) VALUES
 -- Consultas já realizadas
 (2, 1, '2024-11-01 09:00:00', 1),  -- Maria com Dr Carlos
@@ -314,13 +272,10 @@ INSERT INTO consulta (cidadao, hospital, data_hora, medico) VALUES
 (2, 3, '2024-12-11 07:00:00', 7),  -- Maria emergência
 (5, 1, '2024-12-12 18:00:00', 1);  -- Roberto emergência
 
-ROLLBACK TO consultas;
 
 -- ============================
 -- 15. RELACIONAMENTOS (20)
 -- ============================
-SAVEPOINT relacionamentos;
-
 INSERT INTO rel_prontuario_hospital (prontuario, hospital) VALUES
 (1, 1), (1, 2),     -- Dr Carlos: SP e RJ
 (2, 1), (2, 3), (2, 8),  -- Maria: SP, MG, PR
@@ -333,13 +288,10 @@ INSERT INTO rel_prontuario_hospital (prontuario, hospital) VALUES
 (9, 3), (9, 10),    -- Diego: MG e CE
 (10, 6), (10, 7);   -- Camila: BA e PE
 
-ROLLBACK TO relacionamentos;
 
 -- ============================
 -- 16. CONTRATOS (20)
 -- ============================
-SAVEPOINT contratos;
-
 INSERT INTO contrato (carteira_trabalho, empresa, admissao, demissao, cargo, salario, inicio_ferias, fim_ferias) VALUES
 -- Contratos ativos
 (1, 1, '2020-01-15', NULL, 'Medico', 15000.00, '2024-01-15', '2024-02-15'),
@@ -365,13 +317,10 @@ INSERT INTO contrato (carteira_trabalho, empresa, admissao, demissao, cargo, sal
 (7, 1, '2010-06-01', '2018-05-31', 'Neurologista', 14000.00, '2017-11-01', '2017-12-01'),
 (10, 8, '2014-09-01', '2017-04-30', 'Ginecologista', 13500.00, '2016-12-01', '2017-01-01');
 
-ROLLBACK TO contratos;
 
 -- ============================
 -- 17. UNIDADES DETRAN (20)
 -- ============================
-SAVEPOINT unidades_atendimento;
-
 INSERT INTO unidade_atendimento (detran, cidade, rua, numero, bairro) VALUES
 -- DETRAN SP
 (4, 'São Paulo', 'Av Paulista', 1000, 'Bela Vista'),
@@ -397,6 +346,5 @@ INSERT INTO unidade_atendimento (detran, cidade, rua, numero, bairro) VALUES
 (5, 'Campos', 'Av Alberto Torres', 500, 'Centro'),
 (5, 'Macaé', 'Rua Direita', 180, 'Centro');
 
-ROLLBACK TO unidades_atendimento;
 
 COMMIT;

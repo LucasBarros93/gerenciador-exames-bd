@@ -3,9 +3,9 @@ import psycopg2
 conn = psycopg2.connect(
     host="localhost",
     port=5432,
-    database="trab",
-    user="ninja",
-    password="123"
+    database="main",
+    user="grupo3",
+    password="1234"
 )
 
 cur = conn.cursor()
@@ -14,7 +14,3 @@ print(cur.fetchone())
 
 cur.close()
 conn.close()
-
-# Resposta Esperada
-# ('Conectado ao PostgreSQL!',)
-
