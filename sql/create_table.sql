@@ -1,12 +1,14 @@
 CREATE TABLE IF NOT EXISTS idcidadao_cpf (
     idcidadao SERIAL PRIMARY KEY,
     cpf VARCHAR(11) NOT NULL UNIQUE,
+    senha VARCHAR(50) NOT NULL,
     nome VARCHAR(50) NOT NULL,
 
     CHECK (LENGTH(cpf) = 11),  -- CPF deve ter 11 dígitos
     CHECK (cpf ~ '^\d{11}$'), -- CPF deve ter somente números
     CHECK (LENGTH(nome) >= 2),  -- Nome deve ter pelo menos 2 caracteres
-    CHECK (nome ~ '^[A-Za-zÀ-ÿ ]+$')  -- Nome só pode ter letras e espaços
+    CHECK (nome ~ '^[A-Za-zÀ-ÿ ]+$'),  -- Nome só pode ter letras e espaços
+    CHECK (LENGTH(senha) >= 8)  -- Senha deve ter pelo menos 8 caracteres
 );
 
 CREATE TABLE IF NOT EXISTS cidadao (
@@ -97,13 +99,15 @@ CREATE TABLE IF NOT EXISTS medico (
 CREATE TABLE IF NOT EXISTS idempresa_cnpj (
     idempresa SERIAL PRIMARY KEY,
     cnpj VARCHAR(14) NOT NULL UNIQUE,
+    senha VARCHAR(50) NOT NULL,
     nome VARCHAR(50) NOT NULL,
 
     CHECK (LENGTH(cnpj) = 14),  -- CNPJ deve ter 14 dígitos
     CHECK (cnpj ~ '^\d{14}$'),  -- CNPJ deve ter somente números
     CHECK (LENGTH(nome) >= 2),  -- Nome deve ter pelo menos 2 caracteres
     CHECK (nome ~ '^[A-Za-zÀ-ÿ0-9 \-\.&]+$'),  -- Nome: letras, números, espaços, hífen, ponto, &
-    CHECK (nome !~ '^[ \-\.]|[ \-\.]$')  -- Nome não pode começar/terminar com espaço/hífen/ponto
+    CHECK (nome !~ '^[ \-\.]|[ \-\.]$'),  -- Nome não pode começar/terminar com espaço/hífen/ponto
+    CHECK (LENGTH(senha) >= 8)  -- Senha deve ter pelo menos 8 caracteres
 );
 
 CREATE TABLE IF NOT EXISTS empresa (
