@@ -30,49 +30,49 @@ BEGIN;
 -- ============================
 -- 1. INSERIR CIDADÃOS BASE (30)
 -- ============================
-INSERT INTO idcidadao_cpf (cpf, nome) VALUES
+INSERT INTO idcidadao_cpf (cpf, senha, nome) VALUES
 -- MÉDICOS (8)
-('12345678901', 'Dr Carlos Silva'),      -- Cardiologista (49 anos)
-('45678901234', 'Ana Oliveira'),         -- Pediatra (44 anos)
-('78901234567', 'Paulo Henrique'),       -- Neurologista (54 anos)
-('01234567890', 'Camila Barbosa'),       -- Ginecologista (46 anos)
-('11111111111', 'Dr Ricardo Mendes'),    -- Ortopedista (51 anos)
-('44444444444', 'Dra Marina Souza'),     -- Dermatologista (45 anos)
-('77777777777', 'Dr André Lima'),        -- Psiquiatra (52 anos)
-('10101010101', 'Dra Carolina Dias'),    -- Cardiologista (48 anos)
+('12345678901', '12345678', 'Dr Carlos Silva'),      -- Cardiologista (49 anos)
+('45678901234', '12345678', 'Ana Oliveira'),         -- Pediatra (44 anos)
+('78901234567', 'badpassword', 'Paulo Henrique'),       -- Neurologista (54 anos)
+('01234567890', 'senhasuperforte', 'Camila Barbosa'),       -- Ginecologista (46 anos)
+('11111111111', 'vaicorintians', 'Dr Ricardo Mendes'),    -- Ortopedista (51 anos)
+('44444444444', 'eusouohomemdeferro', 'Dra Marina Souza'),     -- Dermatologista (45 anos)
+('77777777777', '87654321', 'Dr André Lima'),        -- Psiquiatra (52 anos)
+('10101010101', 'aaaaaaaa', 'Dra Carolina Dias'),    -- Cardiologista (48 anos)
 
 -- NÃO MÉDICOS POR FAIXA ETÁRIA
 -- Jovens (18-25 anos) - 3 pessoas
-('12121212121', 'Marcos Rocha'),         -- 24 anos
-('13131313131', 'Amanda Pereira'),       -- 25 anos
-('14141414141', 'Pedro Cunha'),          -- 21 anos
-('20202020202', 'Rodrigo Pereira'),      -- 22 anos
+('12121212121', '12345678', 'Marcos Rocha'),         -- 24 anos
+('13131313131', '12345678', 'Amanda Pereira'),       -- 25 anos
+('14141414141', 'badpassword', 'Pedro Cunha'),          -- 21 anos
+('20202020202', '12345678', 'Rodrigo Pereira'),      -- 22 anos
 
 -- Adultos Jovens (26-35 anos) - 5 pessoas
-('23456789012', 'Maria Santos'),         -- 32 anos
-('56789012345', 'Roberto Lima'),         -- 34 anos
-('67890123456', 'Fernanda Alves'),       -- 36 anos
-('89012345678', 'Juliana Rocha'),        -- 29 anos
-('18181818181', 'André Costa'),          -- 26 anos
+('23456789012', '12345678', 'Maria Santos'),         -- 32 anos
+('56789012345', '12345678', 'Roberto Lima'),         -- 34 anos
+('67890123456', '12345678', 'Fernanda Alves'),       -- 36 anos
+('89012345678', '12345678', 'Juliana Rocha'),        -- 29 anos
+('18181818181', '12345678', 'André Costa'),          -- 26 anos
 
 -- Adultos (36-50 anos) - 5 pessoas
-('34567890123', 'João Pedro Costa'),     -- 39 anos
-('90123456789', 'Diego Ferreira'),       -- 41 anos
-('22222222222', 'Beatriz Costa'),        -- 33 anos
-('33333333333', 'Lucas Pereira'),        -- 37 anos
-('66666666666', 'Larissa Oliveira'),     -- 38 anos
+('34567890123', '12345678', 'João Pedro Costa'),     -- 39 anos
+('90123456789', '12345678', 'Diego Ferreira'),       -- 41 anos
+('22222222222', '12345678', 'Beatriz Costa'),        -- 33 anos
+('33333333333', '12345678', 'Lucas Pereira'),        -- 37 anos
+('66666666666', '12345678', 'Larissa Oliveira'),     -- 38 anos
 
 -- Adultos Maduros (51-65 anos) - 5 pessoas
-('55555555555', 'Gabriel Santos'),       -- 31 anos
-('88888888888', 'Priscila Almeida'),     -- 30 anos
-('99999999999', 'Rafael Carvalho'),      -- 40 anos
-('19191919191', 'Patrícia Alves'),       -- 57 anos
-('16161616161', 'Bruno Santos'),         -- 62 anos
+('55555555555', '12345678', 'Gabriel Santos'),       -- 31 anos
+('88888888888', '12345678', 'Priscila Almeida'),     -- 30 anos
+('99999999999', '12345678', 'Rafael Carvalho'),      -- 40 anos
+('19191919191', '12345678', 'Patrícia Alves'),       -- 57 anos
+('16161616161', '12345678', 'Bruno Santos'),         -- 62 anos
 
 -- Idosos (65+ anos) - 3 pessoas
-('15151515151', 'Carla Silva'),          -- 67 anos
-('17171717171', 'Mônica Lima'),          -- 65 anos
-('21212121212', 'Fernanda Silva');       -- 68 anos
+('15151515151', '12345678', 'Carla Silva'),          -- 67 anos
+('17171717171', '12345678', 'Mônica Lima'),          -- 65 anos
+('21212121212', '12345678', 'Fernanda Silva');       -- 68 anos
 
 INSERT INTO cidadao (idcidadao, nascimento, eh_medico) VALUES
 -- MÉDICOS (8)
@@ -203,22 +203,22 @@ INSERT INTO medico (cidadao, especializacao, crm) VALUES
 -- ============================
 -- 6. EMPRESAS (15)
 -- ============================
-INSERT INTO idempresa_cnpj (cnpj, nome) VALUES
-('12345678000101', 'Hospital SP LTDA'),
-('12345678000202', 'Clinica RJ SA'),
-('12345678000303', 'Hospital MG LTDA'),
-('12345678000404', 'DETRAN SP'),
-('12345678000505', 'DETRAN RJ'),
-('12345678000606', 'Hospital BA LTDA'),
-('12345678000707', 'Clinica PE SA'),
-('12345678000808', 'Hospital PR LTDA'),
-('12345678000909', 'Clinica SC SA'),
-('12345678001010', 'Hospital CE LTDA'),
-('12345678001111', 'DETRAN MG'),
-('12345678001212', 'DETRAN RS'),
-('12345678001313', 'DETRAN SC'),
-('12345678001414', 'DETRAN BA'),
-('12345678001515', 'DETRAN GO');
+INSERT INTO idempresa_cnpj (cnpj, senha, nome) VALUES
+('12345678000101', '12345678', 'Hospital SP LTDA'),
+('12345678000202', '87654321', 'Clinica RJ SA'),
+('12345678000303', 'aaaaaaaa', 'Hospital MG LTDA'),
+('12345678000404', 'detransp', 'DETRAN SP'),
+('12345678000505', 'detranrj', 'DETRAN RJ'),
+('12345678000606', 'louvre123', 'Hospital BA LTDA'),
+('12345678000707', 'amelhorclinica', 'Clinica PE SA'),
+('12345678000808', 'bbbbbbbb', 'Hospital PR LTDA'),
+('12345678000909', 'testestest', 'Clinica SC SA'),
+('12345678001010', 'heloisaeuteamo', 'Hospital CE LTDA'),
+('12345678001111', 'gatinhosfofos', 'DETRAN MG'),
+('12345678001212', 'detranrs', 'DETRAN RS'),
+('12345678001313', '123123123', 'DETRAN SC'),
+('12345678001414', 'bbbbbbbbb', 'DETRAN BA'),
+('12345678001515', 'ccccccccc', 'DETRAN GO');
 
 INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo) VALUES
 (1, NULL, 'Av Paulista', 1000, 'Bela Vista', 'Saúde'),

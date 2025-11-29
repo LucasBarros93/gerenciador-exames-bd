@@ -1,9 +1,27 @@
 from src.entities import citizen, exame, consulta
+from sql import connection
 
 
 class GET:
     def __init__(self):
-        pass
+        self.conn = connection.get_connection()
+        self.cursor = self.conn.cursor()
+
+    def login(self, user, senha, who):
+        sql_query = {
+            1: """SELECT idcidadao, cpf, senha FROM idcidadao_cpf
+                    WHERE cpf = %s AND senha = %s""",
+            2: """SELECT idempresa, cnpj, senha FROM idempresa_cnpj
+                    WHERE cnpj = %s AND senha = %s""",
+            3: """SELECT idempresa, cnpj, senha FROM idempresa_cnpj
+                    WHERE cnpj = %s AND senha = %s""",
+        }
+
+        self.cursor.execute(sql_query[who], [user, senha])
+        resultado = self.cursor.fetchone()
+
+        return resultado
+
 
     def exams_from_citizen(self, Cidadao, search_type, search):
         exams = []

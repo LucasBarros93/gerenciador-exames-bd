@@ -1,7 +1,7 @@
 from src.commands import commands
 from src.screens import screen
 from src.utils import utils as u
-from sql import connection 
+from sql import connection
 
 from datetime import datetime
 
@@ -28,8 +28,14 @@ if __name__ == "__main__":
             who = u.input_option(3)
 
             user, senha = Screen.draw_login(who)
-            sql_query = "SELECT "
+            resultado = Get.login(user, senha, who)
 
+            if resultado == None:
+                print()
+                input("Usuario ou senha inválidos. Enter para tentar novamente")
+                continue
+
+            id = resultado[0]
 
         # CADASTRO
         if option == 2:
@@ -93,7 +99,7 @@ if __name__ == "__main__":
                     continue
 
             if option == 5:
-                hospital, date, hour = Screen.draw_schedule() 
+                hospital, date, hour = Screen.draw_schedule()
                 # Post.consultation(hospital, date, hour)
                 # check if the hospital exists
                 Post.schedule_consultation()
@@ -105,7 +111,7 @@ if __name__ == "__main__":
                 # NOTE: filtrariasse por consultas ate a data de hj
                 consultations = Get.consultations_from_citizen(
                     "Citizen", search_type, search
-                ) 
+                )
 
                 if len(consultations) == 0:
                     Screen.draw_404()
@@ -117,10 +123,9 @@ if __name__ == "__main__":
                 print()
                 print("Qual consulta deseja cancelar?")
 
-                cancel = u.input_option(len(consultations)+1)
+                cancel = u.input_option(len(consultations) + 1)
 
                 Post.delete_consultation()
-                
 
         # MAIN GOVERNMENT
         while who == 2:
@@ -140,7 +145,7 @@ if __name__ == "__main__":
 
             if option == 1:
                 # buscando as ainda n realizadas
-                exams = Get.exams_from_hospital("unimed", date=True) 
+                exams = Get.exams_from_hospital("unimed", date=True)
 
             if option == 2:
                 # buncando as não confirmadas
@@ -156,4 +161,3 @@ if __name__ == "__main__":
 
             if exam == len(exams) + 1:
                 continue
-
