@@ -89,10 +89,12 @@ class Screen:
         print()
 
         if who == 1:  # Cidadao
-            user = input("Usuario: ")
+            cpf = input("cpf: ")
             password = input("Senha: ")
+            name = input("nome: ")
+            nasc = input("data de nascimento (DD/MM/AAAA): ").strip()
 
-            return user, password
+            return {'cpf':cpf, 'password':password, 'name':name, 'nasc':nasc}
 
         if who == 2:  # Governo
             user = input("Tipo de instituicao: ")

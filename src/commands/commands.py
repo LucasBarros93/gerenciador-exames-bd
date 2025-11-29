@@ -1,5 +1,6 @@
 from src.entities import citizen, exame, consulta
 from sql import connection
+import psycopg2
 
 
 class GET:
@@ -22,7 +23,6 @@ class GET:
 
         return resultado
 
-
     def exams_from_citizen(self, Cidadao, search_type, search):
         exams = []
 
@@ -36,16 +36,14 @@ class GET:
         consultations = []
 
         # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente
-        consultations.append(
-            consulta.Consulta(0, "1111", "Unimed", data_hora="13-01")
-        )
+        consultations.append(consulta.Consulta(0, "1111", "Unimed", data_hora="13-01"))
         consultations.append(
             consulta.Consulta(1, "2222", "Santa Casa", data_hora="21-03")
         )
 
         return consultations
 
-    # date é pra pegar as que são depois de hoje 
+    # date é pra pegar as que são depois de hoje
     # to_verify pega as que não estão confirmadas ainda
     def exams_from_hospital(self, hospital, date=False, to_verify=False):
         exams = []
@@ -59,7 +57,32 @@ class GET:
 
 class POST:
     def __init__(self):
-        pass
+        self.conn = connection.get_connection()
+        self.cursor = self.conn.cursor()
+
+    def sign_up(self, who, data):
+        sql_query1 = {
+            1: """INSERT INTO idcidadao_cpf (cpf, senha, nome)
+                    VALUES (%(cpf)s, %(password)s, %(name)s)
+                    RETURNING idcidadao;"""
+        }
+
+        sql_query2 = {
+            1: """INSERT INTO cidadao (idcidadao, nascimento, eh_medico) 
+                    VALUES (%s, TO_DATE(%s, 'DD/MM/YYY'), false)"""
+        }
+        try:
+            self.cursor.execute(sql_query1[who], data)
+            id = self.cursor.fetchone()[0]
+
+            self.cursor.execute(sql_query2[who], [id, data["nasc"]])
+            self.conn.commit()
+            return id
+
+        except psycopg2.Error as error:
+            self.conn.rollback()
+            print("Erro:", error)
+            return None 
 
     def schedule_consultation(self):
         pass

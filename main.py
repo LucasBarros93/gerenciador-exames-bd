@@ -42,7 +42,12 @@ if __name__ == "__main__":
             Screen.draw_who()
             who = u.input_option(3)
 
-            Screen.draw_sign_up(who)
+            data = Screen.draw_sign_up(who)
+            id = Post.sign_up(who, data)
+            if id == None:
+                print()
+                input("Algo deu errado. Enter para tentar novamente")
+                continue
 
         # CITIZEN MAIN
         while who == 1:
