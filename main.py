@@ -1,10 +1,14 @@
 from src.commands import commands
 from src.screens import screen
 from src.utils import utils as u
+from sql import connection 
 
 from datetime import datetime
 
 if __name__ == "__main__":
+    conn = connection.get_connection()
+    cursor = conn.cursor()
+
     while True:
         Screen = screen.Screen()
 
@@ -23,7 +27,9 @@ if __name__ == "__main__":
             Screen.draw_who()
             who = u.input_option(3)
 
-            Screen.draw_login(who)
+            user, senha = Screen.draw_login(who)
+            sql_query = "SELECT "
+
 
         # CADASTRO
         if option == 2:

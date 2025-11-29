@@ -62,15 +62,14 @@ class Screen:
         self.state = State.LOGIN
 
         if who == 1:  # cidadao
-            user = input("CPF: ")
+            cpf = input("CPF: ")
             password = input("Senha: ")
-            return user, password
+            return cpf, password
 
         if who == 2:  # Governo
-            user = input("Tipo de instituicao: ")
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
-            return user, cnpj, password
+            return cnpj, password
 
         if who == 3:  # Governo
             cnpj = input("CNPJ: ")
