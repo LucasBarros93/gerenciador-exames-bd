@@ -1,16 +1,17 @@
 import psycopg2
+from dotenv import load_dotenv
+import os
 
-conn = psycopg2.connect(
-    host="localhost",
-    port=5432,
-    database="main",
-    user="grupo3",
-    password="1234"
-)
+# Carregar variáveis do .env
+load_dotenv()
 
-cur = conn.cursor()
-cur.execute("SELECT 'Conectado ao PostgreSQL!'")
-print(cur.fetchone())
+def get_connection():
+    conn = psycopg2.connect(
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT"),
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD")
+    )
+    return conn
 
-cur.close()
-conn.close()
