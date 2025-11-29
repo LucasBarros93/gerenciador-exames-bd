@@ -31,14 +31,16 @@ JOIN
 -----------------------------------------------------------------------------------------------
 
 -- CONSULTA 2: ESSA CONSULTA ENVOLVE CONCEITOS DA DIVISÃO RELACIONAL.
--- SELECIONAR A ID E IDADE DOS PACIENTES QUE FORAM ATENDIDOS POR MÉDICOS QUE ATENDERAM EM TODOS OS 
--- HOSPITAIS PÚBLICOS (A ID_PACIENTE ESTÁ EM CONSONÂNCIA COM A LGPD).
+-- SELECIONAR O HORÁRIO DA CONSULTA, A ID DOS MÉDICOS QUE ATENDERAM EM TODOS OS HOSPITAIS PÚBLICOS,
+--   A ID E IDADE DOS PACIENTES QUE FORAM ATENDIDOS POR ELES(A ID_PACIENTE E ID_MEDICO ESTÃO EM CONSONÂNCIA COM A LGPD).
 
 -----------------------------------------------------------------------------------------------
 
 SELECT 
     dados_paciente.idcidadao AS id_paciente,
-    ROUND((CURRENT_DATE - dados_paciente.nascimento)/365) As idade_paciente -- Calcula a idade do paciente com base na data atual
+    c.medico AS id_medico,
+    ROUND((CURRENT_DATE - dados_paciente.nascimento)/365) As idade_paciente, -- Calcula a idade do paciente com base na data atual
+    c.data_hora
 FROM consulta c
 JOIN cidadao dados_paciente ON dados_paciente.idcidadao = c.cidadao
 WHERE c.medico IN (
@@ -56,7 +58,8 @@ WHERE c.medico IN (
         WHERE cons.medico = m.cidadao
 
     )
-);
+)
+ORDER BY id_paciente;
 
 -----------------------------------------------------------------------------------------------
 
@@ -65,19 +68,20 @@ WHERE c.medico IN (
 -- TAMBÉM CONSULTAR A PORCENTAGEM DE CNHs ATIVAS COM TODOS OS EXAMES EM RELAÇÃO AO TOTAL DE CNHs ATIVAS,
 -- POR ESTADO. 
 
+-- OBS: COALESCE É USADO PARA CONVERTER NULL EM 0, PARA MOSTRAR ESTADOS COM TOTAL_CNH_COM_EXAMES = 0% 
 -----------------------------------------------------------------------------------------------
 
 SELECT 
     T.estado,
-    R.total_CNH_com_exames,
+    COALESCE(R.total_CNH_com_exames, 0) AS total_CNH_com_exames,
     T.total_CNH,
-    ROUND((R.total_CNH_com_exames / T.total_CNH) * 100, 2) AS porcentagem_com_exames
+    ROUND((COALESCE(R.total_CNH_com_exames, 0)::DECIMAL / T.total_CNH) * 100, 2) AS porcentagem_com_exames
 FROM 
     (SELECT d.estado AS estado, COUNT(c.cidadao) AS total_CNH
      FROM detran d JOIN cnh c ON d.empresa = c.detran
      GROUP BY d.estado) AS T -- Obtém a relação com a contagem do total de cidadãos com CNH ativas por estado
-JOIN
-    (SELECT D.estado AS estado, COUNT(C.cidadao) AS total_CNH_com_exames
+LEFT JOIN
+    (SELECT D.estado AS estado, COUNT(DISTINCT C.cidadao) AS total_CNH_com_exames
      FROM detran D JOIN cnh C ON D.empresa = C.detran
      JOIN 
         consulta ON C.cidadao = consulta.cidadao
@@ -124,7 +128,7 @@ SELECT
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 18 AND 25 THEN '1. Jovem (18-25)'
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 26 AND 35 THEN '2. Adulto Jovem (26-35)'
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 36 AND 50 THEN '3. Adulto (36-50)'
-       WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 51 AND 65 THEN '4. Adulto Maduro (50-65)'
+       WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 51 AND 65 THEN '4. Adulto Maduro (51-65)'
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) > 65 THEN '5. Idoso (65+)'
     END AS faixa_etaria,
 
