@@ -3,7 +3,7 @@
 
 -----------------------------------------------------------------------------------------------
 
--- CONSULTA 1: RETORNA O ID E TIPO DE ATENDIMENTO DOS HOSPITAIS CUJO VOLUME DE ACESSO A PRONTUÁRIOS
+-- CONSULTA 1: RETORNA O ID, TIPO DE ATENDIMENTO E TOTAL DE PRONTUÁRIOS ACESSADOS DOS HOSPITAIS CUJO VOLUME DE ACESSO A PRONTUÁRIOS
 -- É MAIOR QUE A MÉDIA. (A ID DO HOSPITAL ESTÁ EM CONSONÂNCIA COM A LGPD)
 
 -----------------------------------------------------------------------------------------------
