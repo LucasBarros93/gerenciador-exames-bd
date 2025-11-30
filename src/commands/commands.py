@@ -21,19 +21,43 @@ class GET:
 
         return resultado
 
-    def consultations_from_citizen(self, cidadao, search):
+    def consultations_from_citizen(self, cidadao_id, search):
         if search == None:
             sql_query = """SELECT * FROM consulta C
-                        WHERE C.cidadao = %s"""
+                        WHERE C.cidadao = %s
+                        ORDER BY C.data_hora"""
 
-            self.cursor.execute(sql_query, [cidadao])
+            self.cursor.execute(sql_query, [cidadao_id])
 
         else:
             sql_query = """SELECT * FROM consulta C
-                        WHERE C.cidadao = %s and C.data_hora::date = TO_DATE(%s, 'DD/MM/YYYY')"""
+                        WHERE C.cidadao = %s and C.data_hora::date = TO_DATE(%s, 'DD/MM/YYYY')
+                        ORDER BY C.data_hora"""
 
-            self.cursor.execute(sql_query, [cidadao, search])
+            self.cursor.execute(sql_query, [cidadao_id, search])
 
+        result = self.cursor.fetchall()
+
+        consultations = [
+            consulta.Consulta(
+                id=row[0],
+                cidadao=row[1],
+                hospital=row[2],
+                data_hora=row[3],
+                medico=row[4],
+            )
+            for row in result
+        ]
+
+        return consultations
+
+    def consultations_from_hospital(self, hospital_id):
+        # Consulta: todas as consultas do hospital a partir de hoje
+        sql_query = """SELECT * FROM consulta C
+                    WHERE C.hospital = %s 
+                    ORDER BY C.data_hora"""
+
+        self.cursor.execute(sql_query, [hospital_id])
         result = self.cursor.fetchall()
 
         consultations = [
@@ -88,9 +112,3 @@ class POST:
             self.conn.rollback()
             print("Erro:", error)
             return None
-
-    def schedule_consultation(self):
-        pass
-
-    def delete_consultation(self):
-        pass

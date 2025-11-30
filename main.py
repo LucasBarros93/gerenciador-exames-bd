@@ -80,21 +80,21 @@ if __name__ == "__main__":
         while who == 2:
             Screen.draw_hospital()
             option = u.input_option(2)
-            # Command.commands_hospital(option)
+
             if option == 2:
                 break
 
             if option == 1:
-                # buscando as ainda n realizadas
-                exams = Get.exams_from_hospital("unimed", date=True)
+                consultations = Get.consultations_from_hospital(id)
 
-            if len(exams) == 0:
-                Screen.draw_404()
-                input()
-                continue
+                if len(consultations) == 0:
+                    Screen.draw_404()
+                    input()
+                    continue
 
-            Screen.draw_list_exams(exams)
-            exam = u.input_option(len(exams) + 1)
+                Screen.draw_list_consultations(consultations)
+                skip = u.input_option(1)
 
-            if exam == len(exams) + 1:
-                continue
+                if skip == 1:
+                    continue
+

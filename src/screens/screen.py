@@ -136,7 +136,7 @@ class Screen:
         print("|-----------------|")
 
         print()
-        print("[1]: Listar exames marcados do hospital")
+        print("[1]: Listar consulta marcados do hospital")
         print("[2]: Voltar para o inicio")
 
     def draw_list_consultations(self, consultations):
@@ -173,21 +173,6 @@ class Screen:
 
         print()
         print("Enter para voltar")
-
-    def draw_schedule(self):
-        clear()
-
-        print("|-----------------|")
-        print("|-Marcar consulta-|")
-        print("|-----------------|")
-
-        print()
-
-        hospital = input("Hospital: ")
-        date = input("Data: ")
-        hour = input("Hora: ")
-
-        return hospital, date, hour
 
 
 if __name__ == "__main__":
