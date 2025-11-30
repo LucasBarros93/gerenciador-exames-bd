@@ -4,115 +4,61 @@
 
 ```
 gerenciamento_exames/
-│
-├── sql/
-│   ├── 01_criar_tabelas.sql
-│   ├── 02_criar_indices.sql
-│   ├── 03_restricoes_integridade.sql
-│   ├── 04_dados_iniciais.sql
-│   └── schema.sql 
-│
-├── src/
-│   ├── __init__.py
-│   ├── config.py
-│   ├── database.py
-│   ├── models/
-│   │   ├── cidadao.py
-│   │   ├── medico.py
-│   │   ├── hospital.py
-│   │   ├── exame.py
-│   │   ├── consulta.py
-│   │   ├── crm.py
-│   │   └── prontuario.py
-│   ├── repositories/
-│   │   ├── cidadao_repository.py
-│   │   ├── medico_repository.py
-│   │   ├── hospital_repository.py
-│   │   ├── exame_repository.py
-│   │   └── consulta_repository.py
-│   ├── services/
-│   │   ├── autenticacao_service.py
-│   │   ├── exame_service.py
-│   │   ├── consulta_service.py
-│   │   └── validacao_service.py
-│   ├── routes/
-│   │   ├── cidadao_routes.py
-│   │   ├── hospital_routes.py
-│   │   ├── exame_routes.py
-│   │   ├── governo_routes.py
-│   │   └── auth_routes.py
-│   └── utils/
-│       └── utils.py
-│
-├── tests/
-│   └── test.py
-│
 ├── main.py
+├── README.md
 ├── requirements.txt
-└── README.md
+├── .gitignore
+├── sql
+│   ├── connection.py
+│   ├── consultas.sql
+│   ├── dados.sql
+│   ├── esquema.sql
+│   └── init.sql
+└── src
+    ├── __init__.py
+    ├── commands.py
+    ├── consulta.py
+    ├── screen.py
+    └── utils.py
 ```
-Sugestão da IA, não sei o que é metade disso ai
 
 ## Explicação da estrutura
-### Pasta sql/ - Scripts de Banco de Dados 
+### /sql
+Organiza os arquivos de banco de dados do projeto, além do `connection.py`, que é responsável pela conexão da aplicação com o banco
 
-Escopo: Centraliza todos os scripts SQL do PostgreSQL, organizados em ordem de execução
-Relação: Estes arquivos são executados uma única vez durante a configuração inicial do banco. A aplicação Python fará leitura/escrita neste banco. 
+#### init.sql
+Exemplo de como criar a base
 
-### Pasta src/ - Código-Fonte Principal 
+#### esquema.sql
+Criação de todas as tabelas da base
 
-Este é o coração da aplicação[2]. Aqui fica toda a lógica da aplicação. Vou detalhar cada subpasta: 
-#### config.py - Configurações Globais 
+#### dados.sql
+Inserção inicial de dados do banco
 
-Escopo: Define variáveis de ambiente e configurações da aplicação. 
-Relação: É importado por database.py para conectar ao banco e pela aplicação principal para definir comportamentos. 
+#### consultas.sql
+Cinco consultas exigidas pelo trabalho
 
-#### database.py - Gerenciador de Conexão 
+### /src
+Organiza os arquivos diretamente ligados a aplicação
 
-Escopo: Estabelece e gerencia a conexão com PostgreSQL
-Relação: É utilizado por todos os repositories. Cada repository recebe uma instância do Database para executar operações. 
+#### commands.py
+Execução dos comandos sql feitos pela aplicação com dados coletados do usuário
 
-### Pasta models/ - Definições de Dados 
+#### consulta.py
+Criação da classe "consulta" relacianada a tabela de mesmo nome. Nota: não confundir com consultas.sql, o nome é só conhecidencia
 
-Escopo: Definem a estrutura das entidades do sistema (não são modelos ORM, mas representações das tabelas)[3]. 
-Relação: São usados pelos repositories para estruturar dados antes de salvar no banco ou depois de recuperar. 
+#### screen.py
+Implementação da classe que desenha todas as telas da aplicação
 
-### Pasta repositories/ - Acesso a Dados 
+#### utils.py
+Funções uteis
 
-Escopo: Implementam o padrão Repository, abstraindo operações SQL
-Relação:  
-- Recebem uma instância de Database no construtor
-- Usam models/ para estruturar dados
-- São consumidos pelos services/
-     
-### Pasta services/ - Lógica de Negócio 
+### main.py
+Coração da aplicação, onde tudo acontece.
 
-Escopo: Implementam as regras de negócio da aplicação. Orquestram múltiplos repositories
-Relação: 
-- Recebem múltiplos repositories (injeção de dependência)
-- Implementam a lógica que a aplicação precisa
-- São chamados pelos routes/
-     
-### Pasta routes/ - Endpoints da API 
+### requirements.txt
+Bibliotecas python necessárias para a execução da aplicação
 
-Escopo: Define os endpoints HTTP que os usuários acessam[2]. 
-Relação: 
-- Recebem requests HTTP dos usuários
-- Chamam services/ para processar
-- Retornam responses HTTP
+### README.md
+Este arquivo...
 
-### Pasta utils/ - Utilitários 
-
-Escopo: Funções auxiliares compartilhadas pela aplicação. 
-Relação: Importados por services/ e routes/ conforme necessário. 
-
-### Pasta tests/ - Testes Automatizados 
-
-Escopo: Testes unitários e de integração
-Relação: Executados durante desenvolvimento para garantir que services/ e repositories/ funcionam corretamente. 
-
-### Arquivos Raiz 
-
-#### main.py - Inicializa a aplicação Flask 
-#### env - Variáveis de ambiente  
-#### requirements.txt - Dependências Python

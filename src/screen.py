@@ -1,4 +1,4 @@
-from src.utils import utils as u
+from src import utils as u
 import os
 
 

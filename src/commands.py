@@ -1,4 +1,4 @@
-from src.entities import consulta
+from src import consulta
 from sql import connection
 import psycopg2
 
@@ -73,6 +73,10 @@ class GET:
 
         return consultations
 
+    def kill(self):
+        self.cursor.close()
+        self.conn.close()
+
 
 class POST:
     def __init__(self):
@@ -112,3 +116,7 @@ class POST:
             self.conn.rollback()
             print("Erro:", error)
             return None
+
+    def kill(self):
+        self.cursor.close()
+        self.conn.close()

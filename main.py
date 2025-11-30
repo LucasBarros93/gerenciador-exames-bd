@@ -1,6 +1,6 @@
-from src.commands import commands
-from src.screens import screen
-from src.utils import utils as u
+from src import commands
+from src import screen
+from src import utils as u
 from sql import connection
 
 from datetime import datetime
@@ -98,3 +98,5 @@ if __name__ == "__main__":
                 if skip == 1:
                     continue
 
+    Get.kill()
+    Post.kill()
