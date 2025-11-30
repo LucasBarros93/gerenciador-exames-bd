@@ -14,8 +14,6 @@ class GET:
                     WHERE cpf = %s AND senha = %s""",
             2: """SELECT idempresa, cnpj, senha FROM idempresa_cnpj
                     WHERE cnpj = %s AND senha = %s""",
-            3: """SELECT idempresa, cnpj, senha FROM idempresa_cnpj
-                    WHERE cnpj = %s AND senha = %s""",
         }
 
         self.cursor.execute(sql_query[who], [user, senha])
@@ -68,17 +66,12 @@ class POST:
             2: """INSERT INTO idempresa_cnpj (cnpj, senha, nome)
                     VALUES (%(cnpj)s, %(password)s, %(name)s)
                     RETURNING idempresa;""",
-            3: """INSERT INTO idempresa_cnpj (cnpj, senha, nome)
-                    VALUES (%(cnpj)s, %(password)s, %(name)s)
-                    RETURNING idempresa;""",
         }
 
         sql_query2 = {
             1: """INSERT INTO cidadao (idcidadao, nascimento, eh_medico) 
                     VALUES (%s, TO_DATE(%s, 'DD/MM/YYY'), false)""",
             2: """INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo)
-                    VALUES (%(id)s, %(franchise)s, %(st)s, %(num)s, %(nb)s, %(type)s)""",
-            3: """INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo)
                     VALUES (%(id)s, %(franchise)s, %(st)s, %(num)s, %(nb)s, %(type)s)""",
         }
 

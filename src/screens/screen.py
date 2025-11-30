@@ -1,14 +1,5 @@
-from enum import Enum
 from src.utils import utils as u
 import os
-
-
-class State(Enum):
-    WELCOME = 1
-    LOGIN = 2
-    SING_UP = 3
-    WHO = 4
-    CITIZEN = 5
 
 
 def clear():
@@ -21,7 +12,7 @@ def clear():
 
 class Screen:
     def __init__(self):
-        self.state = State.WELCOME
+        pass
 
     def draw_welcome(self):
         clear()
@@ -35,7 +26,6 @@ class Screen:
         print("[2]: Cadastra-se")
         print("[3]: Sair")
 
-        self.state = State.WELCOME
 
     def draw_who(self):
         clear()
@@ -46,10 +36,7 @@ class Screen:
 
         print()
         print("[1]: Cidadao")
-        print("[2]: Instituição governamental")
-        print("[3]: Hospital")
-
-        self.state = State.WHO
+        print("[2]: Empresa")
 
     def draw_login(self, who):
         clear()
@@ -60,19 +47,13 @@ class Screen:
 
         print()
 
-        self.state = State.LOGIN
 
         if who == 1:  # cidadao
             cpf = input("CPF: ")
             password = input("Senha: ")
             return cpf, password
 
-        if who == 2:  # Governo
-            cnpj = input("CNPJ: ")
-            password = input("Senha: ")
-            return cnpj, password
-
-        if who == 3:  # Governo
+        if who == 2:  # Empresa
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
             return cnpj, password
@@ -97,7 +78,7 @@ class Screen:
 
             return {"cpf": cpf, "password": password, "name": name, "nasc": nasc}
 
-        if who == 2 or who == 3:  # Governo ou Hospital
+        if who == 2:  # Empresa
             name = input("Nome da instituicao: ")
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
@@ -135,8 +116,6 @@ class Screen:
         input("ERROR: opcao invalida")
         return
 
-        self.state = State.SING_UP
-
     def draw_citizen(self):
         clear()
 
@@ -153,21 +132,6 @@ class Screen:
         print("[6]: Cancelar consulta")
         print("[7]: Voltar para o inicio")
 
-        self.state = State.CITIZEN
-
-    def draw_government(self):
-        clear()
-
-        print("|-----------------|")
-        print("|O que quer fazer?|")
-        print("|-----------------|")
-
-        print()
-        print("[1]: Desenvolvimento em beta, opcoes de governo ainda nao implemntadas")
-        print("[2]: Voltar para o inicio")
-
-        self.state = State.CITIZEN
-
     def draw_hospital(self):
         clear()
 
@@ -177,10 +141,7 @@ class Screen:
 
         print()
         print("[1]: Listar exames marcados do hospital")
-        print("[2]: Confirmar exames do hospital")
-        print("[3]: Voltar para o inicio")
-
-        self.state = State.CITIZEN
+        print("[2]: Voltar para o inicio")
 
     def draw_exam_search(self):
         clear()
@@ -196,7 +157,6 @@ class Screen:
         print("[4]: Consulta")
         print("[5]: Data do exame")
 
-        self.state = State.CITIZEN
 
     def draw_list_exams(self, exams):
         clear()

@@ -25,7 +25,7 @@ if __name__ == "__main__":
         # LOGIN
         if option == 1:
             Screen.draw_who()
-            who = u.input_option(3)
+            who = u.input_option(2)
 
             user, senha = Screen.draw_login(who)
             resultado = Get.login(user, senha, who)
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         # CADASTRO
         if option == 2:
             Screen.draw_who()
-            who = u.input_option(3)
+            who = u.input_option(2)
 
             data = Screen.draw_sign_up(who)
             id = Post.sign_up(who, data)
@@ -132,29 +132,18 @@ if __name__ == "__main__":
 
                 Post.delete_consultation()
 
-        # MAIN GOVERNMENT
-        while who == 2:
-            Screen.draw_government()
-            option = u.input_option(2)
-            # Command.commands_government(option)
-            if option == 2:
-                break
-
         # HOSPITAL MAIN
-        while who == 3:
+        while who == 2:
             Screen.draw_hospital()
-            option = u.input_option(3)
+            option = u.input_option(2)
             # Command.commands_hospital(option)
-            if option == 3:
+            if option == 2:
                 break
 
             if option == 1:
                 # buscando as ainda n realizadas
                 exams = Get.exams_from_hospital("unimed", date=True)
 
-            if option == 2:
-                # buncando as não confirmadas
-                exams = Get.exams_from_hospital("unimed", to_verify=True)
 
             if len(exams) == 0:
                 Screen.draw_404()
