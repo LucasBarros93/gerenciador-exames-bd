@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 def input_option(n):
     while True:
         try:
@@ -10,9 +13,14 @@ def input_option(n):
         print("Valor invalido")
 
 
-def checkCidadaoLogin(cpf, password):
-    # Placeholder function for checking citizen login
-    # In a real implementation, this would check against a database or other data source
-    if cpf == "valid_cpf" and password == "valid_password":
-        return True
-    return False
+def input_valid_date(strg):
+    while True:
+        try:
+            date_str = input(strg)
+            datetime.strptime(date_str, "%d/%m/%Y")
+            return date_str
+
+        except ValueError:
+            pass
+
+        print("Valor invalido")

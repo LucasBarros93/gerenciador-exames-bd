@@ -74,7 +74,7 @@ class Screen:
             cpf = input("cpf: ")
             password = input("Senha: ")
             name = input("nome: ")
-            nasc = input("data de nascimento (DD/MM/AAAA): ").strip()
+            nasc = u.input_valid_date("data de nascimento (DD/MM/AAAA): ").strip()
 
             return {"cpf": cpf, "password": password, "name": name, "nasc": nasc}
 
@@ -161,7 +161,7 @@ class Screen:
         print("|------------------------------|")
 
         print()
-        date = input("(DD/MM/AAAA): ")
+        date = u.input_valid_date("(DD/MM/AAAA): ")
         return date
 
     def draw_404(self):
