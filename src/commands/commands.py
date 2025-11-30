@@ -1,50 +1,114 @@
-from src.entities import citizen, exame, consulta
+from src.entities import consulta
+from sql import connection
+import psycopg2
 
 
 class GET:
     def __init__(self):
-        pass
+        self.conn = connection.get_connection()
+        self.cursor = self.conn.cursor()
 
-    def exams_from_citizen(self, Cidadao, search_type, search):
-        exams = []
+    def login(self, user, senha, who):
+        sql_query = {
+            1: """SELECT idcidadao, cpf, senha FROM idcidadao_cpf
+                    WHERE cpf = %s AND senha = %s""",
+            2: """SELECT idempresa, cnpj, senha FROM idempresa_cnpj
+                    WHERE cnpj = %s AND senha = %s""",
+        }
 
-        # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente
-        exams.append(exame.ExameMedicoCNH(0, "1111", "Joao", data_exame="13-01"))
-        exams.append(exame.ExameMedicoCNH(1, "2222", "Lucas", data_exame="21-03"))
+        self.cursor.execute(sql_query[who], [user, senha])
+        resultado = self.cursor.fetchone()
 
-        return exams
+        return resultado
 
-    def consultations_from_citizen(self, Cidadao, search_type, search):
-        consultations = []
+    def consultations_from_citizen(self, cidadao_id, search):
+        if search == None:
+            sql_query = """SELECT * FROM consulta C
+                        WHERE C.cidadao = %s
+                        ORDER BY C.data_hora"""
 
-        # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente
-        consultations.append(
-            consulta.Consulta(0, "1111", "Unimed", data_hora="13-01")
-        )
-        consultations.append(
-            consulta.Consulta(1, "2222", "Santa Casa", data_hora="21-03")
-        )
+            self.cursor.execute(sql_query, [cidadao_id])
+
+        else:
+            sql_query = """SELECT * FROM consulta C
+                        WHERE C.cidadao = %s and C.data_hora::date = TO_DATE(%s, 'DD/MM/YYYY')
+                        ORDER BY C.data_hora"""
+
+            self.cursor.execute(sql_query, [cidadao_id, search])
+
+        result = self.cursor.fetchall()
+
+        consultations = [
+            consulta.Consulta(
+                id=row[0],
+                cidadao=row[1],
+                hospital=row[2],
+                data_hora=row[3],
+                medico=row[4],
+            )
+            for row in result
+        ]
 
         return consultations
 
-    # date é pra pegar as que são depois de hoje 
-    # to_verify pega as que não estão confirmadas ainda
-    def exams_from_hospital(self, hospital, date=False, to_verify=False):
-        exams = []
+    def consultations_from_hospital(self, hospital_id):
+        # Consulta: todas as consultas do hospital a partir de hoje
+        sql_query = """SELECT * FROM consulta C
+                    WHERE C.hospital = %s 
+                    ORDER BY C.data_hora"""
 
-        # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente
-        exams.append(exame.ExameMedicoCNH(0, "1111", "Joao", data_exame="13-01"))
-        exams.append(exame.ExameMedicoCNH(1, "2222", "Lucas", data_exame="21-03"))
+        self.cursor.execute(sql_query, [hospital_id])
+        result = self.cursor.fetchall()
 
-        return exams
+        consultations = [
+            consulta.Consulta(
+                id=row[0],
+                cidadao=row[1],
+                hospital=row[2],
+                data_hora=row[3],
+                medico=row[4],
+            )
+            for row in result
+        ]
+
+        return consultations
 
 
 class POST:
     def __init__(self):
-        pass
+        self.conn = connection.get_connection()
+        self.cursor = self.conn.cursor()
 
-    def schedule_consultation(self):
-        pass
+    def sign_up(self, who, data):
+        sql_query1 = {
+            1: """INSERT INTO idcidadao_cpf (cpf, senha, nome)
+                    VALUES (%(cpf)s, %(password)s, %(name)s)
+                    RETURNING idcidadao;""",
+            2: """INSERT INTO idempresa_cnpj (cnpj, senha, nome)
+                    VALUES (%(cnpj)s, %(password)s, %(name)s)
+                    RETURNING idempresa;""",
+        }
 
-    def delete_consultation(self):
-        pass
+        sql_query2 = {
+            1: """INSERT INTO cidadao (idcidadao, nascimento, eh_medico) 
+                    VALUES (%s, TO_DATE(%s, 'DD/MM/YYYY'), false)""",
+            2: """INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo)
+                    VALUES (%(id)s, %(franchise)s, %(st)s, %(num)s, %(nb)s, %(type)s)""",
+        }
+
+        try:
+            self.cursor.execute(sql_query1[who], data)
+            id = self.cursor.fetchone()[0]
+
+            if who == 1:
+                self.cursor.execute(sql_query2[who], [id, data["nasc"]])
+            else:
+                data["id"] = id
+                self.cursor.execute(sql_query2[who], data)
+            self.conn.commit()
+            return id
+
+        except psycopg2.Error as error:
+            self.conn.rollback()
+            print("Erro:", error)
+            return None
