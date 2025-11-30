@@ -1,4 +1,4 @@
-from src.entities import citizen, consulta
+from src.entities import consulta
 from sql import connection
 import psycopg2
 
@@ -30,9 +30,8 @@ class GET:
 
         else:
             sql_query = """SELECT * FROM consulta C
-                        WHERE C.cidadao = %s and C.data_hora = TO_DATE(%s, 'DD/MM/YYYY')"""
+                        WHERE C.cidadao = %s and C.data_hora::date = TO_DATE(%s, 'DD/MM/YYYY')"""
 
-            input(sql_query)
             self.cursor.execute(sql_query, [cidadao, search])
 
         result = self.cursor.fetchall()

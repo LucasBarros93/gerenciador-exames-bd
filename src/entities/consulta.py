@@ -10,13 +10,13 @@ class Consulta:
         self.medico = medico
 
     def __str__(self):
-        return f"Consulta(ID: {self.id}, Hospital: {self.hospital}, Data: {self.data_hora.strftime("%d.%m.%y")})"
+        return f"Consulta(ID: {self.id}, Hospital: {self.hospital}, Data: {self.data_hora.strftime("%d.%m.%y as %H:%M")})"
 
     def to_dict(self):
         return {
             "id_consulta": self.id,
-            "cidadao_fk": self.cidadao,
-            "hospital_fk": self.hospital,
+            "cidadao": self.cidadao,
+            "hospital": self.hospital,
             "data_hora": self.data_hora,
-            "medico_fk": self.medico,
+            "medico": self.medico,
         }
