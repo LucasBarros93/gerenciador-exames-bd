@@ -1,4 +1,5 @@
 from enum import Enum
+from src.utils import utils as u
 import os
 
 
@@ -94,20 +95,42 @@ class Screen:
             name = input("nome: ")
             nasc = input("data de nascimento (DD/MM/AAAA): ").strip()
 
-            return {'cpf':cpf, 'password':password, 'name':name, 'nasc':nasc}
+            return {"cpf": cpf, "password": password, "name": name, "nasc": nasc}
 
-        if who == 2:  # Governo
-            user = input("Tipo de instituicao: ")
+        if who == 2 or who == 3:  # Governo ou Hospital
+            name = input("Nome da instituicao: ")
             cnpj = input("CNPJ: ")
             password = input("Senha: ")
 
-            return user, cnpj, password
+            franchise = input("Franquia (opcional): ")
+            st = input("Rua: ")
+            num = input("Numero: ")
+            nb = input("Bairro: ")
 
-        if who == 3:  # hospital
-            cnpj = input("CNPJ: ")
-            password = input("Senha: ")
+            print(
+                "Tipo: [1]Órgão Público, [2]Empresa Privada, [3]ONG, [4]Educação, [5]Saúde, [6]Serviços, [7]Não se aplica"
+            )
+            tipo = u.input_option(7)
+            type = {
+                1: "Órgão Público",
+                2: "Empresa Privada",
+                3: "ONG",
+                4: "Educação",
+                5: "Saúde",
+                6: "Serviços",
+                7: None,
+            }
 
-            return cnpj, password
+            return {
+                "name": name,
+                "cnpj": cnpj,
+                "password": password,
+                "franchise": franchise,
+                "st": st,
+                "num": num,
+                "nb": nb,
+                "type": type[tipo],
+            }
 
         input("ERROR: opcao invalida")
         return

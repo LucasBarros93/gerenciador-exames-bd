@@ -64,25 +64,40 @@ class POST:
         sql_query1 = {
             1: """INSERT INTO idcidadao_cpf (cpf, senha, nome)
                     VALUES (%(cpf)s, %(password)s, %(name)s)
-                    RETURNING idcidadao;"""
+                    RETURNING idcidadao;""",
+            2: """INSERT INTO idempresa_cnpj (cnpj, senha, nome)
+                    VALUES (%(cnpj)s, %(password)s, %(name)s)
+                    RETURNING idempresa;""",
+            3: """INSERT INTO idempresa_cnpj (cnpj, senha, nome)
+                    VALUES (%(cnpj)s, %(password)s, %(name)s)
+                    RETURNING idempresa;""",
         }
 
         sql_query2 = {
             1: """INSERT INTO cidadao (idcidadao, nascimento, eh_medico) 
-                    VALUES (%s, TO_DATE(%s, 'DD/MM/YYY'), false)"""
+                    VALUES (%s, TO_DATE(%s, 'DD/MM/YYY'), false)""",
+            2: """INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo)
+                    VALUES (%(id)s, %(franchise)s, %(st)s, %(num)s, %(nb)s, %(type)s)""",
+            3: """INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo)
+                    VALUES (%(id)s, %(franchise)s, %(st)s, %(num)s, %(nb)s, %(type)s)""",
         }
+
         try:
             self.cursor.execute(sql_query1[who], data)
             id = self.cursor.fetchone()[0]
 
-            self.cursor.execute(sql_query2[who], [id, data["nasc"]])
+            if who == 1:
+                self.cursor.execute(sql_query2[who], [id, data["nasc"]])
+            else:
+                data["id"] = id
+                self.cursor.execute(sql_query2[who], data)
             self.conn.commit()
             return id
 
         except psycopg2.Error as error:
             self.conn.rollback()
             print("Erro:", error)
-            return None 
+            return None
 
     def schedule_consultation(self):
         pass
