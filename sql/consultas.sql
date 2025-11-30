@@ -132,30 +132,20 @@ SELECT
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 51 AND 65 THEN '4. Adulto Maduro (51-65)'
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) > 65 THEN '5. Idoso (65+)'
     END AS faixa_etaria,
-
-    COUNT(*) AS numero_ocorrencias, -- conta as ocorrencias pra cada faixa etaria
-
+    COUNT(*) AS numero_ocorrencias,
     ROUND(
         (COUNT(*) * 100.0) / (  
             SELECT COUNT(*)
             FROM cnh carteira_total
-            JOIN cidadao c_total ON c_total.idcidadao = carteira_total.cidadao
-            WHERE NOT EXISTS (
-                SELECT *
-                FROM contrato ct_total
-                WHERE ct_total.carteira_trabalho = c_total.idcidadao
-                AND ct_total.demissao IS NULL
-            )
+            LEFT JOIN contrato ct_total ON ct_total.carteira_trabalho = carteira_total.cidadao 
+                      AND ct_total.demissao IS NULL
+            WHERE ct_total.carteira_trabalho IS NULL
         ), 
     2) AS porcentagem_total
-
 FROM cnh carteira
 JOIN cidadao c ON c.idcidadao = carteira.cidadao
-WHERE NOT EXISTS (
-    SELECT *
-    FROM contrato ct
-    WHERE ct.carteira_trabalho = c.idcidadao 
-    AND ct.demissao IS NULL 
-) 
+LEFT JOIN contrato ct ON ct.carteira_trabalho = c.idcidadao 
+                      AND ct.demissao IS NULL
+WHERE ct.carteira_trabalho IS NULL
 GROUP BY faixa_etaria
 ORDER BY faixa_etaria;
