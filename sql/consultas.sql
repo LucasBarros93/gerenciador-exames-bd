@@ -121,7 +121,7 @@ ORDER BY id_hospital, EXTRACT(YEAR FROM con.data_hora) DESC; -- Ordena por ano e
 
 
 -----------------------------------------------------------------------------------------------
--- CONSULTA 5: OBTÉM, PARA OS CIDADÃOS DESEMPREGADOS, A PORCENTAGEM DE CADA FAIXA ETÁRIA PARA QUE POSSUI CNH
+-- CONSULTA 5: OBTÉM, PARA OS CIDADÃOS DESEMPREGADOS, A PORCENTAGEM DE CADA FAIXA ETÁRIA QUE POSSUI CNH
 -----------------------------------------------------------------------------------------------
 
 SELECT 
@@ -132,20 +132,23 @@ SELECT
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) BETWEEN 51 AND 65 THEN '4. Adulto Maduro (51-65)'
        WHEN EXTRACT(YEAR FROM AGE(c.nascimento)) > 65 THEN '5. Idoso (65+)'
     END AS faixa_etaria,
-    COUNT(*) AS numero_ocorrencias,
+    COUNT(DISTINCT c.idcidadao) AS numero_ocorrencias,
     ROUND(
-        (COUNT(*) * 100.0) / (  
-            SELECT COUNT(*)
+        (COUNT(DISTINCT c.idcidadao) * 100.0) / (   -- Subconsulta para obter os total de desempregados
+            SELECT COUNT(DISTINCT carteira_total.cidadao) 
             FROM cnh carteira_total
             LEFT JOIN contrato ct_total ON ct_total.carteira_trabalho = carteira_total.cidadao 
-                      AND ct_total.demissao IS NULL
-            WHERE ct_total.carteira_trabalho IS NULL
+                      AND ct_total.demissao IS NULL  -- Busca apenas contratos ativos
+            WHERE ct_total.carteira_trabalho IS NULL   -- Filtra quem NÃO tem contrato ativo, devido ao LEFT JOIN
         ), 
     2) AS porcentagem_total
 FROM cnh carteira
-JOIN cidadao c ON c.idcidadao = carteira.cidadao
-LEFT JOIN contrato ct ON ct.carteira_trabalho = c.idcidadao 
-                      AND ct.demissao IS NULL
-WHERE ct.carteira_trabalho IS NULL
+JOIN cidadao c ON c.idcidadao = carteira.cidadao -- Feito para obter a data de nascimento para cada cidadão com cnh
+-- Resultado: Se cidadão TEM contrato ativo → preenche campos de contrato
+--           Se cidadão NÃO TEM contrato ativo → ct.carteira_trabalho = NULL
+LEFT JOIN contrato ct ON ct.carteira_trabalho = c.idcidadao -- Encontra contratos ATIVOS para cada cidadão com cnh: 
+                      AND ct.demissao IS NULL -- Se o cidadão não tem contrato ou se foi demitido, o LEFT JOIN preenche todos os atributos 
+                                              --    de contrato como NULL
+WHERE ct.carteira_trabalho IS NULL -- Seleciona só os contratos atribuidos como NULL pelo LEFT JOIN
 GROUP BY faixa_etaria
 ORDER BY faixa_etaria;
