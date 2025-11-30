@@ -13,7 +13,7 @@ class GET:
             1: """SELECT idcidadao, cpf, senha FROM idcidadao_cpf
                     WHERE cpf = %s AND senha = %s""",
             2: """SELECT idempresa, cnpj, senha FROM idempresa_cnpj
-                    WHERE cnpj = %s AND senha = %s AND tipo = 'Saúde'""",
+                    WHERE cnpj = %s AND senha = %s""",
         }
 
         self.cursor.execute(sql_query[who], [user, senha])
