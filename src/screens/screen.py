@@ -124,13 +124,9 @@ class Screen:
         print("|-----------------|")
 
         print()
-        print("[1]: Ver lista completa de exames")
-        print("[2]: Buscar exames")
-        print("[3]: Ver lista completa de consultas")
-        print("[4]: Buscar consulta")
-        print("[5]: Marcar consulta")
-        print("[6]: Cancelar consulta")
-        print("[7]: Voltar para o inicio")
+        print("[1]: Ver lista completa de consultas")
+        print("[2]: Buscar consulta por data")
+        print("[3]: Voltar para o inicio")
 
     def draw_hospital(self):
         clear()
@@ -143,34 +139,6 @@ class Screen:
         print("[1]: Listar exames marcados do hospital")
         print("[2]: Voltar para o inicio")
 
-    def draw_exam_search(self):
-        clear()
-
-        print("|------------------|")
-        print("|-Pelo que buscar?-|")
-        print("|------------------|")
-
-        print()
-        print("[1]: Id")
-        print("[2]: Tipo de exame")
-        print("[3]: Medico")
-        print("[4]: Consulta")
-        print("[5]: Data do exame")
-
-
-    def draw_list_exams(self, exams):
-        clear()
-
-        print("|-----------------|")
-        print("|-Lista de Exames-|")
-        print("|-----------------|")
-
-        print()
-        for i in range(len(exams)):
-            print(f"[{i+1}]: {exams[i].__str__()}")
-
-        print(f"[{len(exams)+1}]: Voltar")
-
     def draw_list_consultations(self, consultations):
         clear()
 
@@ -180,23 +148,21 @@ class Screen:
 
         print()
         for i in range(len(consultations)):
-            print(f"[{i+1}]: {consultations[i].__str__()}")
+            print(f"{i+1}: {consultations[i].__str__()}")
 
-        print(f"[{len(consultations)+1}]: Voltar")
+        print()
+        print("[1]: Voltar")
 
     def draw_consultation_search(self):
         clear()
 
-        print("|------------------|")
-        print("|-Pelo que buscar?-|")
-        print("|------------------|")
+        print("|------------------------------|")
+        print("|-Qual a data da sua consulta?-|")
+        print("|------------------------------|")
 
         print()
-        print("[1]: Id")
-        print("[2]: Hospital")
-        print("[3]: Data")
-
-        self.state = State.CITIZEN
+        date = input("(DD/MM/AAAA): ")
+        return date
 
     def draw_404(self):
         clear()

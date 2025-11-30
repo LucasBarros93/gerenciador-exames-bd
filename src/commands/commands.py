@@ -1,4 +1,4 @@
-from src.entities import citizen, exame, consulta
+from src.entities import citizen, consulta
 from sql import connection
 import psycopg2
 
@@ -21,36 +21,34 @@ class GET:
 
         return resultado
 
-    def exams_from_citizen(self, Cidadao, search_type, search):
-        exams = []
+    def consultations_from_citizen(self, cidadao, search):
+        if search == None:
+            sql_query = """SELECT * FROM consulta C
+                        WHERE C.cidadao = %s"""
 
-        # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente
-        exams.append(exame.ExameMedicoCNH(0, "1111", "Joao", data_exame="13-01"))
-        exams.append(exame.ExameMedicoCNH(1, "2222", "Lucas", data_exame="21-03"))
+            self.cursor.execute(sql_query, [cidadao])
 
-        return exams
+        else:
+            sql_query = """SELECT * FROM consulta C
+                        WHERE C.cidadao = %s and C.data_hora = TO_DATE(%s, 'DD/MM/YYYY')"""
 
-    def consultations_from_citizen(self, Cidadao, search_type, search):
-        consultations = []
+            input(sql_query)
+            self.cursor.execute(sql_query, [cidadao, search])
 
-        # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente
-        consultations.append(consulta.Consulta(0, "1111", "Unimed", data_hora="13-01"))
-        consultations.append(
-            consulta.Consulta(1, "2222", "Santa Casa", data_hora="21-03")
-        )
+        result = self.cursor.fetchall()
+
+        consultations = [
+            consulta.Consulta(
+                id=row[0],
+                cidadao=row[1],
+                hospital=row[2],
+                data_hora=row[3],
+                medico=row[4],
+            )
+            for row in result
+        ]
 
         return consultations
-
-    # date é pra pegar as que são depois de hoje
-    # to_verify pega as que não estão confirmadas ainda
-    def exams_from_hospital(self, hospital, date=False, to_verify=False):
-        exams = []
-
-        # Em tese vamos usar Cidadao.cpf para dar get na base eventualmente
-        exams.append(exame.ExameMedicoCNH(0, "1111", "Joao", data_exame="13-01"))
-        exams.append(exame.ExameMedicoCNH(1, "2222", "Lucas", data_exame="21-03"))
-
-        return exams
 
 
 class POST:
@@ -70,7 +68,7 @@ class POST:
 
         sql_query2 = {
             1: """INSERT INTO cidadao (idcidadao, nascimento, eh_medico) 
-                    VALUES (%s, TO_DATE(%s, 'DD/MM/YYY'), false)""",
+                    VALUES (%s, TO_DATE(%s, 'DD/MM/YYYY'), false)""",
             2: """INSERT INTO empresa (idempresa, franquia, rua, numero, bairro, tipo)
                     VALUES (%(id)s, %(franchise)s, %(st)s, %(num)s, %(nb)s, %(type)s)""",
         }
