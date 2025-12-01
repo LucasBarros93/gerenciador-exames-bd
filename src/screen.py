@@ -136,7 +136,7 @@ class Screen:
         print("|-----------------|")
 
         print()
-        print("[1]: Listar consulta marcados do hospital")
+        print("[1]: Listar consultas marcadas no hospital")
         print("[2]: Voltar para o inicio")
 
     def draw_list_consultations(self, consultations):
