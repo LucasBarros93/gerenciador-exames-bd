@@ -72,7 +72,7 @@ class Screen:
 
         if who == 1:  # Cidadao
             cpf = input("cpf: ")
-            password = input("Senha: ")
+            password = input("Senha (min. 8 caracteres): ")
             name = input("nome: ")
             nasc = u.input_valid_date("data de nascimento (DD/MM/AAAA): ").strip()
 
@@ -81,7 +81,7 @@ class Screen:
         if who == 2:  # Empresa
             name = input("Nome da instituicao: ")
             cnpj = input("CNPJ: ")
-            password = input("Senha: ")
+            password = input("Senha (min. 8 caracteres): ")
 
             franchise = input("Franquia (opcional): ")
             st = input("Rua: ")
