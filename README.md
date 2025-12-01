@@ -1,6 +1,11 @@
 # gerenciador-exames-bd
 
-## Estrutura do Projeto
+Sistema em Python para gerenciar exames médicos utilizando PostgreSQL como banco de dados.
+A aplicação roda no terminal e permite cadastrar consultas, visualizar dados e executar consultas SQL obrigatórias do trabalho.
+
+---
+
+##  Estrutura do Projeto
 
 ```
 gerenciamento_exames/
@@ -8,6 +13,7 @@ gerenciamento_exames/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
+├── .env.example
 ├── sql
 │   ├── connection.py
 │   ├── consultas.sql
@@ -22,43 +28,152 @@ gerenciamento_exames/
     └── utils.py
 ```
 
-## Explicação da estrutura
-### /sql
-Organiza os arquivos de banco de dados do projeto, além do `connection.py`, que é responsável pela conexão da aplicação com o banco
+---
 
-#### init.sql
-Exemplo de como criar a base
+##  Explicação da Estrutura
 
-#### esquema.sql
-Criação de todas as tabelas da base
+### `sql/`
 
-#### dados.sql
-Inserção inicial de dados do banco
+Contém tudo relacionado ao banco de dados.
 
-#### consultas.sql
-Cinco consultas exigidas pelo trabalho
+#### `connection.py`
 
-### /src
-Organiza os arquivos diretamente ligados a aplicação
+Arquivo Python responsável por conectar na base usando as variáveis do `.env`.
 
-#### commands.py
-Execução dos comandos sql feitos pela aplicação com dados coletados do usuário
+#### `init.sql`
 
-#### consulta.py
-Criação da classe "consulta" relacianada a tabela de mesmo nome. Nota: não confundir com consultas.sql, o nome é só conhecidencia
+Criação da **DATABASE** e permissões básicas (exemplo de estrutura inicial).
 
-#### screen.py
-Implementação da classe que desenha todas as telas da aplicação
+#### `esquema.sql`
 
-#### utils.py
-Funções uteis
+Criação de todas as **tabelas** do sistema.
 
-### main.py
-Coração da aplicação, onde tudo acontece.
+#### `dados.sql`
 
-### requirements.txt
-Bibliotecas python necessárias para a execução da aplicação
+Inserção de dados iniciais (exemplos para teste).
 
-### README.md
-Este arquivo...
+#### `consultas.sql`
 
+Cinco consultas SQL obrigatórias do trabalho.
+
+---
+
+### `src/`
+
+Contém toda a lógica da aplicação.
+
+#### `commands.py`
+
+Executa os comandos SQL necessários, interage com o banco e retorna resultados para a interface.
+
+#### `consulta.py`
+
+Implementa a classe `Consulta`, representando a tabela de mesmo nome.
+*(Não confundir com consultas.sql — coincidência de nomes).*
+
+#### `screen.py`
+
+Implementa a lógica responsável por desenhar todas as telas e menus da aplicação no terminal.
+
+#### `utils.py`
+
+Funções auxiliares usadas em várias partes do projeto.
+
+---
+
+### `main.py`
+
+Ponto de entrada da aplicação: inicializa telas, comandos, menus e toda a lógica principal.
+
+### `requirements.txt`
+
+Lista de bibliotecas Python necessárias para rodar o projeto.
+
+### `README.md`
+
+Você está aqui :)
+
+### `.env.example`
+
+Exemplo de arquivo do ambiente contendo as variáveis necessárias para conectar ao PostgreSQL.
+
+---
+
+## Como usar
+
+### 1. Criar e ativar o **venv**
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 2. Instalar dependências
+
+```sh
+pip install -r requirements.txt
+```
+
+---
+
+## Configurar o banco PostgreSQL
+
+### 1. Criar a DATABASE
+
+Execute o `init.sql`:
+
+```sh
+sudo -u postgres psql -f sql/init.sql
+```
+
+Ou:
+
+```sh
+psql -U postgres -f sql/init.sql
+```
+
+---
+
+### 2. Criar as tabelas
+
+```sh
+psql -d <nome_da_base> -f sql/esquema.sql
+```
+
+### 3. Inserir dados iniciais (opcional)
+
+```sh
+psql -d <nome_da_base> -f sql/dados.sql
+```
+
+---
+
+## Configurar variáveis de ambiente (.env)
+
+Crie um arquivo `.env` na raiz:
+
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=gerenciador
+DB_USER=grupo3
+DB_PASSWORD=senha
+```
+
+Você também pode copiar o exemplo:
+
+```sh
+cp .env.example .env
+```
+
+---
+
+## Executar o programa
+
+Com o venv ativado:
+
+```sh
+python3 main.py
+```
+
+A interface de terminal será exibida, permitindo navegar pelas telas, cadastrar consultas, listar dados e executar as consultas pré-definidas.
