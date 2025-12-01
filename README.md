@@ -137,13 +137,13 @@ psql -U postgres -f sql/init.sql
 ### 2. Criar as tabelas
 
 ```sh
-psql -d <nome_da_base> -f sql/esquema.sql
+psql -U <usuario> -d <nome_da_base> -f sql/esquema.sql
 ```
 
 ### 3. Inserir dados iniciais (opcional)
 
 ```sh
-psql -d <nome_da_base> -f sql/dados.sql
+psql -U <usuario> -d <nome_da_base> -f sql/dados.sql
 ```
 
 ---
